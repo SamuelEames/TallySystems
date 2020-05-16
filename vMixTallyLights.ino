@@ -49,7 +49,7 @@ void setup() {
 	FastLED.setMaxPowerInVoltsAndMilliamps(5,120);
 
 	for (int i = 0; i < NUM_LEDS; ++i)
-		leds[i] = COL_WHITE;
+		leds[i] = COL_BLACK;
 
 	FastLED.show();
 
@@ -59,6 +59,13 @@ void setup() {
 // Second parameter is the event type, combined with the channel.
 // Third parameter is the control number number (0-119).
 // Fourth parameter is the control value (0-127).
+
+#define CHAN_NUM 1			// Channel number to listen to. (Note: Starts at 0, but starts from 1 in other software)
+
+uint8_t LastEvent = 0;
+uint8_t LastChan	= 0;
+uint8_t LastNote	= 0;
+uint8_t LastValue = 0;
 
 void controlChange(byte channel, byte control, byte value) {
 	midiEventPacket_t event = {0x0B, 0xB0 | channel, control, value};
@@ -81,15 +88,29 @@ void loop()
 			Serial.print(rx.byte2, HEX);
 			Serial.print("-");
 			Serial.println(rx.byte3, HEX);
+
+			// Remember the things
+			LastEvent = rx.byte1 >> 4;
+			LastChan 	= rx.byte1 && 0x0F;
+			LastNote	= rx.byte2;
+			LastNote	= rx.byte3;
 		}
 	} while (rx.header != 0);
 
-	if (rx.byte3 == 0x7F)
+	if (LastChan == CHAN_NUM)
 	{
-		leds[0] = COL_RED;
+		if (LastNote == 0x7F)
+		{
+			leds[LastValue] = COL_RED;
+			// Serial.println(rx.byte3, DEC);
+		}
+		else
+			leds[LastValue] = COL_GREEN;
 	}
-	else
-		leds[0] = COL_GREEN;
+
+
+
+	// Serial.println(rx.byte3, DEC);
 
 	FastLED.show();
 }
