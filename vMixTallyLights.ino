@@ -14,6 +14,11 @@
 #define DATA_PIN 21
 CRGB leds[NUM_LEDS]; // Define the array of leds
 
+#define NUM_TALLY NUM_LEDS
+#define LED_BRIGHTNESS 10
+
+uint8_t TallyStatus[NUM_TALLY]; // Holds current status of tally lights
+
 #define COL_RED     0xFF0000
 #define COL_ORANGE  0xFF2800
 #define COL_YELLOW  0xFF8F00
@@ -41,17 +46,23 @@ void noteOff(byte channel, byte pitch, byte velocity) {
 	MidiUSB.sendMIDI(noteOff);
 }
 
-void setup() {
+void setup() 
+{
 	Serial.begin(115200);
 
-
+	// Setup Pixel LEDs
 	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-	FastLED.setMaxPowerInVoltsAndMilliamps(5,120);
+	// FastLED.setMaxPowerInVoltsAndMilliamps(5,120);
 
-	for (int i = 0; i < NUM_LEDS; ++i)
+	for (int i = 0; i < NUM_LEDS; ++i)	// Clear LEDs
 		leds[i] = COL_BLACK;
 
+	FastLED.setBrightness(LED_BRIGHTNESS);
+
 	FastLED.show();
+
+	for (int i = 0; i < NUM_TALLY; ++i)	// clear tally light array
+		TallyStatus[i] = 0;
 
 }
 
@@ -89,28 +100,90 @@ void loop()
 			Serial.print("-");
 			Serial.println(rx.byte3, HEX);
 
-			// Remember the things
-			LastEvent = rx.byte1 >> 4;
-			LastChan 	= rx.byte1 && 0x0F;
-			LastNote	= rx.byte2;
-			LastNote	= rx.byte3;
+			// // Remember the things
+			// LastEvent = rx.byte1 >> 4;
+			// LastChan 	= rx.byte1 && 0x0F;
+			// LastNote	= rx.byte2;
+			// LastValue	= rx.byte3;
+
+			// Write MIDI tally data to TallyArray
+			if ((rx.byte1 & 0x0F) == CHAN_NUM)
+			{
+				Serial.print("Channel Number = ");
+				Serial.println(rx.byte1 & 0x0F, HEX);
+				if (rx.byte2 < NUM_TALLY)
+					TallyStatus[rx.byte2] = rx.byte3;
+			}
+
+
+
+			// 	if (LastValue == 0x7F)
+			// 	{
+			// 		leds[LastNote] = COL_RED;
+			// 		// Serial.println(rx.byte3, DEC);
+			// 	}
+			// 	else
+			// 		leds[LastNote] = COL_GREEN;
+			// }
+
+			
 		}
 	} while (rx.header != 0);
 
-	if (LastChan == CHAN_NUM)
+	if (Serial.available() > 0) 
 	{
-		if (LastNote == 0x7F)
+
+		while(Serial.available()){Serial.read();} // clear serial buffer
+
+		Serial.print("Tally Buffer = ");
+
+		for (int i = 0; i < NUM_TALLY; ++i)
 		{
-			leds[LastValue] = COL_RED;
-			// Serial.println(rx.byte3, DEC);
+			Serial.print(TallyStatus[i], HEX);
+			Serial.print(", \t");
 		}
-		else
-			leds[LastValue] = COL_GREEN;
+
+		Serial.println();
+
 	}
+	
 
 
+	LightLEDs();
 
 	// Serial.println(rx.byte3, DEC);
 
-	FastLED.show();
+	// FastLED.show();
+
+	
 }
+
+void LightLEDs()
+{
+
+	for (int i = 0; i < NUM_LEDS; ++i)
+	{
+		if (TallyStatus[i] == 0x7F)
+			leds[i] = COL_RED;
+		else
+			leds[i] = COL_GREEN;
+	}
+
+	FastLED.show();
+
+
+	// if (LastChan == CHAN_NUM)
+	// {
+	// 	if (LastValue == 0x7F)
+	// 	{
+	// 		leds[LastNote] = COL_RED;
+	// 		// Serial.println(rx.byte3, DEC);
+	// 	}
+	// 	else
+	// 		leds[LastNote] = COL_GREEN;
+	// }
+
+	
+}
+
+
