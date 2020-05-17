@@ -8,6 +8,17 @@
 
 #include "FastLED.h"
 #include "MIDIUSB.h"
+// #include <SPI.h>
+#include "RF24.h"
+
+//RF Variables
+RF24 myRadio (7, 8); // CE, CSN
+byte addresses[][6] = {"973126"};
+
+// byte Scores[8] = {0,0,0,0,0,0,0,0};
+const byte numChars = 32;
+char receivedChars[numChars];
+boolean newData = false;
 
 // Pixel Setup
 #define NUM_LEDS 12
@@ -15,7 +26,7 @@
 CRGB leds[NUM_LEDS]; // Define the array of leds
 
 #define NUM_TALLY NUM_LEDS
-#define LED_BRIGHTNESS 10
+#define LED_BRIGHTNESS 5
 
 uint8_t TallyStatus[NUM_TALLY]; // Holds current status of tally lights
 
@@ -49,6 +60,13 @@ void noteOff(byte channel, byte pitch, byte velocity) {
 void setup() 
 {
 	Serial.begin(115200);
+
+	//Setup Radio Transmitter
+	myRadio.begin();  
+	myRadio.setChannel(115);
+	myRadio.setPALevel(RF24_PA_MAX);
+	myRadio.setDataRate( RF24_250KBPS );
+	myRadio.openWritingPipe( addresses[0]);
 
 	// Setup Pixel LEDs
 	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
@@ -100,63 +118,25 @@ void loop()
 			Serial.print("-");
 			Serial.println(rx.byte3, HEX);
 
-			// // Remember the things
-			// LastEvent = rx.byte1 >> 4;
-			// LastChan 	= rx.byte1 && 0x0F;
-			// LastNote	= rx.byte2;
-			// LastValue	= rx.byte3;
 
 			// Write MIDI tally data to TallyArray
 			if ((rx.byte1 & 0x0F) == CHAN_NUM)
 			{
-				Serial.print("Channel Number = ");
-				Serial.println(rx.byte1 & 0x0F, HEX);
 				if (rx.byte2 < NUM_TALLY)
 					TallyStatus[rx.byte2] = rx.byte3;
 			}
-
-
-
-			// 	if (LastValue == 0x7F)
-			// 	{
-			// 		leds[LastNote] = COL_RED;
-			// 		// Serial.println(rx.byte3, DEC);
-			// 	}
-			// 	else
-			// 		leds[LastNote] = COL_GREEN;
-			// }
-
-			
+			newData = true;			
 		}
 	} while (rx.header != 0);
 
-	if (Serial.available() > 0) 
-	{
-
-		while(Serial.available()){Serial.read();} // clear serial buffer
-
-		Serial.print("Tally Buffer = ");
-
-		for (int i = 0; i < NUM_TALLY; ++i)
-		{
-			Serial.print(TallyStatus[i], HEX);
-			Serial.print(", \t");
-		}
-
-		Serial.println();
-
-	}
-	
-
-
+	PrintTallyArray();
 	LightLEDs();
-
-	// Serial.println(rx.byte3, DEC);
-
-	// FastLED.show();
-
+	sendData();
 	
 }
+
+
+
 
 void LightLEDs()
 {
@@ -169,21 +149,50 @@ void LightLEDs()
 			leds[i] = COL_GREEN;
 	}
 
+	// TODO - Make LED yellow if mic live but not on program
 	FastLED.show();
-
-
-	// if (LastChan == CHAN_NUM)
-	// {
-	// 	if (LastValue == 0x7F)
-	// 	{
-	// 		leds[LastNote] = COL_RED;
-	// 		// Serial.println(rx.byte3, DEC);
-	// 	}
-	// 	else
-	// 		leds[LastNote] = COL_GREEN;
-	// }
-
 	
 }
 
+
+void sendData() 
+{
+	if (newData == true) 
+	{
+		//Print Sent Data to Serial Port
+		Serial.print("Sent Data: ");
+		for (int i = 0; i < NUM_TALLY; ++i)
+		{
+			Serial.print(TallyStatus[i], HEX);
+			Serial.print(", \t");
+		}
+
+		Serial.println();
+		// Serial.println(TallyStatus);
+		// Serial.println(sizeof(TallyStatus));
+
+		//Sent the Data over RF
+		myRadio.write(&TallyStatus, sizeof(TallyStatus));
+		newData = false;  
+	}
+	return;
+}
+
+void PrintTallyArray()
+{
+	if (Serial.available() > 0) 
+	{
+		while(Serial.available()){Serial.read();} // clear serial buffer
+
+		Serial.print("Tally Buffer = ");
+
+		for (int i = 0; i < NUM_TALLY; ++i)
+		{
+			Serial.print(TallyStatus[i], HEX);
+			Serial.print(", \t");
+		}
+
+		Serial.println();
+	}
+}
 
