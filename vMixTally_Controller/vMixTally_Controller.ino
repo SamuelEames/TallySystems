@@ -1,26 +1,16 @@
-/*
- * MIDIUSB_test.ino
- *
- * Created: 4/6/2015 10:47:08 AM
- * Author: gurbrinder grewal
- * Modified by Arduino LLC (2015)
- */ 
-
 #include "FastLED.h"
 #include "MIDIUSB.h"
-// #include <SPI.h>
 #include "RF24.h"
 
-//RF Variables
+//////////////////// RF Variables ////////////////////
 RF24 myRadio (7, 8); // CE, CSN
 byte addresses[][6] = {"973126"};
 
-// byte Scores[8] = {0,0,0,0,0,0,0,0};
 const byte numChars = 32;
 char receivedChars[numChars];
 boolean newData = false;
 
-// Pixel Setup
+//////////////////// Pixel Setup ////////////////////
 #define NUM_LEDS 12
 #define DATA_PIN 21
 CRGB leds[NUM_LEDS]; // Define the array of leds
@@ -40,22 +30,22 @@ uint8_t TallyStatus[NUM_TALLY]; // Holds current status of tally lights
 #define COL_BLACK   0x000000
 
 
-// MIDI Setup
+//////////////////// MIDI Setup ////////////////////
 // First parameter is the event type (0x09 = note on, 0x08 = note off).
 // Second parameter is note-on/note-off, combined with the channel.
 // Channel can be anything between 0-15. Typically reported to the user as 1-16.
 // Third parameter is the note number (48 = middle C).
 // Fourth parameter is the velocity (64 = normal, 127 = fastest).
 
-void noteOn(byte channel, byte pitch, byte velocity) {
-	midiEventPacket_t noteOn = {0x09, 0x90 | channel, pitch, velocity};
-	MidiUSB.sendMIDI(noteOn);
-}
+// void noteOn(byte channel, byte pitch, byte velocity) {
+// 	midiEventPacket_t noteOn = {0x09, 0x90 | channel, pitch, velocity};
+// 	MidiUSB.sendMIDI(noteOn);
+// }
 
-void noteOff(byte channel, byte pitch, byte velocity) {
-	midiEventPacket_t noteOff = {0x08, 0x80 | channel, pitch, velocity};
-	MidiUSB.sendMIDI(noteOff);
-}
+// void noteOff(byte channel, byte pitch, byte velocity) {
+// 	midiEventPacket_t noteOff = {0x08, 0x80 | channel, pitch, velocity};
+// 	MidiUSB.sendMIDI(noteOff);
+// }
 
 void setup() 
 {
@@ -70,7 +60,6 @@ void setup()
 
 	// Setup Pixel LEDs
 	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-	// FastLED.setMaxPowerInVoltsAndMilliamps(5,120);
 
 	for (int i = 0; i < NUM_LEDS; ++i)	// Clear LEDs
 		leds[i] = COL_BLACK;
@@ -84,22 +73,13 @@ void setup()
 
 }
 
-// First parameter is the event type (0x0B = control change).
-// Second parameter is the event type, combined with the channel.
-// Third parameter is the control number number (0-119).
-// Fourth parameter is the control value (0-127).
 
 #define CHAN_NUM 1			// Channel number to listen to. (Note: Starts at 0, but starts from 1 in other software)
 
-uint8_t LastEvent = 0;
-uint8_t LastChan	= 0;
-uint8_t LastNote	= 0;
-uint8_t LastValue = 0;
-
-void controlChange(byte channel, byte control, byte value) {
-	midiEventPacket_t event = {0x0B, 0xB0 | channel, control, value};
-	MidiUSB.sendMIDI(event);
-}
+// void controlChange(byte channel, byte control, byte value) {
+// 	midiEventPacket_t event = {0x0B, 0xB0 | channel, control, value};
+// 	MidiUSB.sendMIDI(event);
+// }
 
 void loop() 
 {
@@ -110,13 +90,13 @@ void loop()
 		if (rx.header != 0) 
 		{
 			Serial.print("Received: ");
-			Serial.print(rx.header, HEX);
+			Serial.print(rx.header, HEX);	// event type (0x0B = control change).
 			Serial.print("-");
-			Serial.print(rx.byte1, HEX);
+			Serial.print(rx.byte1, HEX);	// event type, combined with the channel.
 			Serial.print("-");
-			Serial.print(rx.byte2, HEX);
+			Serial.print(rx.byte2, HEX);	// Note
 			Serial.print("-");
-			Serial.println(rx.byte3, HEX);
+			Serial.println(rx.byte3, HEX); 	// Velocity
 
 
 			// Write MIDI tally data to TallyArray
@@ -146,7 +126,7 @@ void LightLEDs()
 		if (TallyStatus[i] == 0x7F)
 			leds[i] = COL_RED;
 		else
-			leds[i] = COL_GREEN;
+			leds[i] = COL_BLUE;
 	}
 
 	// TODO - Make LED yellow if mic live but not on program
@@ -168,8 +148,6 @@ void sendData()
 		}
 
 		Serial.println();
-		// Serial.println(TallyStatus);
-		// Serial.println(sizeof(TallyStatus));
 
 		//Sent the Data over RF
 		myRadio.write(&TallyStatus, sizeof(TallyStatus));

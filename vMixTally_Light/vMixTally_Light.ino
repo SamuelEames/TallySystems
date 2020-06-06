@@ -15,11 +15,11 @@ uint8_t receivedData[numBytes];
 #define TALLY_ON		0x7F 		// 'on' value of tally light
 
 // Pixel Setup
-#define NUM_LEDS 		12
+#define NUM_LEDS 		13
 #define DATA_PIN 		21
 CRGB leds[NUM_LEDS]; // Define the array of leds
 
-#define LED_BRIGHTNESS 5
+#define LED_BRIGHTNESS 50
 
 #define COL_RED     0xFF0000
 #define COL_ORANGE  0xFF2800
