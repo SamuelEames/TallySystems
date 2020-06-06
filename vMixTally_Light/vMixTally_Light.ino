@@ -14,10 +14,15 @@ uint8_t receivedData[numBytes];
 #define TALLY_NUM 	1				// tally number to respond to 
 #define TALLY_ON		0x7F 		// 'on' value of tally light
 
-// Pixel Setup
-#define NUM_LEDS 		13
-#define DATA_PIN 		21
-CRGB leds[NUM_LEDS]; // Define the array of leds
+// Front LEDs - seen by people in front of camera
+#define NUM_LEDS_F 	5
+#define LED_F_PIN 	21
+CRGB ledsFront[NUM_LEDS_F];
+
+// Back LEDs - seen by camera operator
+#define NUM_LEDS_B 	5
+#define LED_B_PIN 	22
+CRGB ledsBack[NUM_LEDS_B];
 
 #define LED_BRIGHTNESS 50
 
@@ -44,7 +49,8 @@ void setup()
 	myRadio.startListening();
 
 	// Setup Pixel LEDs
-	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
+	FastLED.addLeds<WS2812B, LED_F_PIN, GRB>(leds, NUM_LEDS_F);
+	FastLED.addLeds<WS2812B, LED_B_PIN, GRB>(leds, NUM_LEDS_B);
 	FastLED.setBrightness(LED_BRIGHTNESS);
 	clearLEDs();
 	FastLED.show();
@@ -74,7 +80,7 @@ void loop()
 void clearLEDs()
 {
 	for (int i = 0; i < (NUM_LEDS); ++i)
-		leds[i] = CRGB::Black;
+		ledsFront[i] = CRGB::Black;
 
 	return;
 }
@@ -84,7 +90,7 @@ void LightLEDs()
 	if (receivedData[TALLY_NUM] == TALLY_ON)
 	{
 		for (int i = 0; i < NUM_LEDS; ++i)
-			leds[i] = COL_RED;
+			ledsFront[i] = COL_RED;
 	}
 	else
 		clearLEDs();

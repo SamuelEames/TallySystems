@@ -30,6 +30,36 @@ uint8_t TallyStatus[NUM_TALLY]; // Holds current status of tally lights
 #define COL_BLACK   0x000000
 
 
+//////////////////// MISC VARIABLES ////////////////////
+#define PROGRAM 0
+#define PREVIEW 1
+#define AUDIOON 2
+
+//////////////////// PARAMETERS (EDIT AS REQUIRED) ////////////////////
+#define MIDI_CHAN_NUM 	1		// Channel number to listen to. (Note: Counts from 0 here, but starts from 1 in other software)
+
+#define NUM_VMIX_INPUTS 8		// Number of vmix inputs to allow tally for
+#define NUM_BMD_INPUTS 	8		// Number of BMD inputs to allow tally for
+#define NUM_TALLIES		8		// Number of tally lights to transmit data to
+
+// Midi starting notes - indicates note asociated with 'input 1' to listen to 
+#define MIDI_PROG 		0
+#define MIDI_PREV 		10
+#define MIDI_AUDI 		20
+
+#define VMIX_INPUT_TALLY 0		// Input number to generate combined BMD tally data from
+
+//////////////////// GLOBAL VARIABLES ////////////////////
+
+uint8_t vMixProgram[3][VMIX_NUM_INPUTS];
+uint8_t BMDProgram[2][BMD_NUM_INPUTS];
+
+uint8_t tallyState[NUM_TALLIES];	// Holds current state of all tally lights
+
+
+
+
+
 //////////////////// MIDI Setup ////////////////////
 // First parameter is the event type (0x09 = note on, 0x08 = note off).
 // Second parameter is note-on/note-off, combined with the channel.
@@ -74,7 +104,7 @@ void setup()
 }
 
 
-#define CHAN_NUM 1			// Channel number to listen to. (Note: Starts at 0, but starts from 1 in other software)
+
 
 // void controlChange(byte channel, byte control, byte value) {
 // 	midiEventPacket_t event = {0x0B, 0xB0 | channel, control, value};
@@ -100,7 +130,7 @@ void loop()
 
 
 			// Write MIDI tally data to TallyArray
-			if ((rx.byte1 & 0x0F) == CHAN_NUM)
+			if ((rx.byte1 & 0x0F) == MIDI_CHAN_NUM)
 			{
 				if (rx.byte2 < NUM_TALLY)
 					TallyStatus[rx.byte2] = rx.byte3;
@@ -172,5 +202,14 @@ void PrintTallyArray()
 
 		Serial.println();
 	}
+}
+
+
+void GenerateTallyState()
+{
+	// Combines tally data from BMD & vMIX to be shown on cameras
+
+
+	
 }
 
