@@ -18,11 +18,9 @@ boolean newMIDIData = false;
 #define DATA_PIN 21
 CRGB leds[NUM_LEDS]; // Define the array of leds
 
-#define NUM_TALLY NUM_LEDS
 #define LED_BRIGHTNESS 5
 
-uint8_t TallyStatus[NUM_TALLY]; // Holds current status of tally lights
-
+// Colours!
 #define COL_RED     0xFF0000
 #define COL_ORANGE  0xFF2800
 #define COL_YELLOW  0xFF8F00
@@ -50,34 +48,52 @@ ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Addre
 
 
 //////////////////// MISC VARIABLES ////////////////////
-#define PROGRAM 0
-#define PREVIEW 1
-#define AUDIOON 2
+// Used with vMix & ATEM tally data arrays
+#define PROGRAM 				0
+#define PREVIEW 				1
+#define AUDIOON 				2
 
-bool newATEMData = true;		// Data is transmitted to tally receivers on a change
+// Values used in master tally array to indicate each state
+#define TALLY_OFF				0
+#define TALLY_AUDI			1
+#define TALLY_PREV			2
+#define TALLY_PROG			3
+
+
+
 
 //////////////////// PARAMETERS (EDIT AS REQUIRED) ////////////////////
 #define MIDI_CHAN_NUM 	1		// Channel number to listen to. (Note: Counts from 0 here, but starts from 1 in other software)
 
-#define NUM_VMIX_INPUTS 8		// Number of vmix inputs to allow tally for
-#define NUM_ATEM_INPUTS 	8		// Number of ATEM inputs to allow tally for
-#define NUM_TALLIES		8		// Number of tally lights to transmit data to
+#define NUM_VMIX_INPUTS 8		// Number of vmix inputs to allow tally for 
+#define NUM_ATEM_INPUTS 8		// Number of ATEM inputs to allow tally for
+// #define NUM_TALLIES			NUM_ATEM_INPUTS		// Number of tally lights to transmit data to (must be >= to NUM_ATEM)
 
-// Midi starting notes - indicates note asociated with 'input 1' to listen to 
-#define MIDI_PROG 		0
-#define MIDI_PREV 		10
-#define MIDI_AUDI 		20
+// Midi starting notes
+// * indicates note asociated with 'input 1' to listen to 
+// * currently allows 10 inputs max (increase interval below to allow more)
+#define MIDI_PROG 			0
+#define MIDI_PREV 			10
+#define MIDI_AUDI 			20
+
+#define MIDI_ON					0x7F 	// 'On' value of received midi note
+#define MIDI_OFF				0x00  // 'Off' value of received midi note
 
 #define VMIX_INPUT_TALLY 0		// Input number to generate combined ATEM tally data from
 
+uint8_t vMixATEMInputNum = 0;							// Input number associated with ATEM switcher (actually refers to program midi number)
+
 //////////////////// GLOBAL VARIABLES ////////////////////
 
-uint8_t vMixInputState[3][NUM_VMIX_INPUTS]; // 0: program on, 1: preview on, 3: audio on
+bool vMixInputState[3][NUM_VMIX_INPUTS]; 	// 0: program on, 1: preview on, 3: audio on
 bool ATEMInputState[2][NUM_ATEM_INPUTS];
 
-uint8_t tallyState[NUM_TALLIES];	// Holds current state of all tally lights
+bool newATEMData = true;									// Data is transmitted to tally receivers on a change
+bool vMixATEMChange = true; 							// Indicates change in Prev/Prog state of ATEM input within vMix
 
 
+
+uint8_t tallyState[NUM_ATEM_INPUTS];	// Holds current state of all tally lights
 
 
 
@@ -119,8 +135,8 @@ void setup()
 
 	FastLED.show();
 
-	for (int i = 0; i < NUM_TALLY; ++i)	// clear tally light array
-		TallyStatus[i] = 0;
+	for (int i = 0; i < NUM_ATEM_INPUTS; ++i)	// clear tally light array
+		tallyState[i] = TALLY_OFF;
 
 
 	// Start the Ethernet, Serial (debugging) and UDP:
@@ -163,15 +179,15 @@ void loop()
 			// Write MIDI tally data to TallyArray
 			if ((rx.byte1 & 0x0F) == MIDI_CHAN_NUM)
 			{
-				if (rx.byte2 < NUM_TALLY)
-					TallyStatus[rx.byte2] = rx.byte3;
+				SetVMIXTallyState(rx.byte2, rx.byte3);
 			}
 			newMIDIData = true;			
 		}
 	} while (rx.header != 0);
 
+	UpdateEXTTallyState();
 	PrintTallyArray();
-	LightLEDs();
+	LightLEDs_EXTTally();
 	sendData();
 	
 }
@@ -179,8 +195,9 @@ void loop()
 
 
 
-void LightLEDs()
+void LightLEDs_ATEM()
 {
+	// Lights local LEDs based off ATEM prog/Prev data
 
 	// for (int i = 0; i < NUM_LEDS; ++i)
 	// {
@@ -207,22 +224,54 @@ void LightLEDs()
 }
 
 
+void LightLEDs_EXTTally()
+{
+	// Lights local LEDs to match external tally lights
+
+	for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+	{
+		switch (tallyState[i]) 
+		{
+			case TALLY_OFF:
+				leds[i] = COL_BLACK;
+				break;
+
+			case TALLY_PREV:
+				leds[i] = COL_GREEN;
+				break;
+
+			case TALLY_PROG:
+				leds[i] = COL_RED;
+				break;
+
+			default:
+				// statements
+				break;
+		}
+	}	
+
+	FastLED.show();
+
+	return;
+}
+
+
 void sendData() 
 {
 	if (newMIDIData == true) 
 	{
 		//Print Sent Data to Serial Port
 		Serial.print("Sent Data: ");
-		for (int i = 0; i < NUM_TALLY; ++i)
+		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
 		{
-			Serial.print(TallyStatus[i], HEX);
+			Serial.print(tallyState[i], HEX);
 			Serial.print(", \t");
 		}
 
 		Serial.println();
 
 		//Sent the Data over RF
-		myRadio.write(&TallyStatus, sizeof(TallyStatus));
+		myRadio.write(&tallyState, sizeof(tallyState));
 		newMIDIData = false;  
 	}
 	return;
@@ -236,23 +285,49 @@ void PrintTallyArray()
 
 		Serial.print("Tally Buffer = ");
 
-		for (int i = 0; i < NUM_TALLY; ++i)
+		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
 		{
-			Serial.print(TallyStatus[i], HEX);
+			Serial.print(tallyState[i], HEX);
 			Serial.print(", \t");
 		}
 
 		Serial.println();
 	}
+
+	return;
 }
 
 
-void GenerateTallyState()
+void UpdateEXTTallyState()
 {
 	// Combines tally data from ATEM & vMIX to be shown on cameras
 
+	// Check ATEM is in Prev/Prog within vmix
 
+	if (vMixInputState[PROGRAM][vMixATEMInputNum])
+	{
+		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+		{
+			if (ATEMInputState[PROGRAM][i])
+				tallyState[i] = TALLY_PROG;
+			else if (ATEMInputState[PREVIEW][i])
+				tallyState[i] = TALLY_PREV;
+			else
+				tallyState[i] = TALLY_OFF;
+		}
+	}
+	else if (vMixInputState[PREVIEW][vMixATEMInputNum])
+	{
+		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+		{
+			if (ATEMInputState[PROGRAM][i])
+				tallyState[i] = TALLY_PREV;
+			else
+				tallyState[i] = TALLY_OFF;
+		}
+	}
 
+	return;
 }
 
 
@@ -262,8 +337,6 @@ void GetATEMTallyState()
 
 	for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)
 	{
-
-
 		if (AtemSwitcher.getProgramTally(i+1) != ATEMInputState[PROGRAM][i])
 		{
 			ATEMInputState[PROGRAM][i] = AtemSwitcher.getProgramTally(i+1);
@@ -274,7 +347,6 @@ void GetATEMTallyState()
 				Serial.print("Program = ");
 				Serial.println(i);
 			}
-			
 		}
 		
 		if (AtemSwitcher.getPreviewTally(i+1) != ATEMInputState[PREVIEW][i])
@@ -287,8 +359,64 @@ void GetATEMTallyState()
 				Serial.print("Preview = ");
 				Serial.println(i);
 			}
-			
 		}
+	}
+
+	return;
+}
+
+
+void SetVMIXTallyState(uint8_t MIDI_Note, uint8_t MIDI_Value)
+{
+	// Writes midi data to vMix tally array
+
+	// Also checks midi data is what we want to hear!
+	bool state = false;
+
+	// convert midi not value to bool & return if invalid value
+	if (MIDI_Value == MIDI_ON)
+		state = true;
+	else if (MIDI_Value == MIDI_OFF)
+		state = false;
+	else
+		return;
+
+	
+	if (MIDI_Note < NUM_VMIX_INPUTS)										// Program
+		vMixInputState[PROGRAM][MIDI_Note] = state;
+
+	else if (MIDI_Note < NUM_VMIX_INPUTS + MIDI_PREV) 	// Preview
+		vMixInputState[PREVIEW][MIDI_Note - MIDI_PREV] = state;
+
+	else if (MIDI_Note < NUM_VMIX_INPUTS + MIDI_AUDI)		// Audio on
+		vMixInputState[AUDIOON][MIDI_Note - MIDI_AUDI] = state;
+
+	else
+		return;
+
+
+	CheckvMixATEMChange();
+
+	return;
+}
+
+
+void CheckvMixATEMChange()
+{
+	// Checks if prev/prog state of ATEM input within vMix has changed
+	static uint8_t lastProg = 0;
+	static uint8_t lastPrev = 0;
+
+	if (vMixInputState[PROGRAM][vMixATEMInputNum] != lastProg)
+	{
+		vMixATEMChange = true;
+		lastProg = vMixInputState[PROGRAM][vMixATEMInputNum];
+	}
+
+	if (vMixInputState[PREVIEW][vMixATEMInputNum] != lastPrev)
+	{
+		vMixATEMChange = true;
+		lastPrev = vMixInputState[PREVIEW][vMixATEMInputNum];
 	}
 
 	return;
