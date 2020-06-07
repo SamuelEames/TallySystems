@@ -60,14 +60,11 @@ ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Addre
 #define TALLY_PROG			3
 
 
-
-
 //////////////////// PARAMETERS (EDIT AS REQUIRED) ////////////////////
 #define MIDI_CHAN_NUM 	1		// Channel number to listen to. (Note: Counts from 0 here, but starts from 1 in other software)
 
 #define NUM_VMIX_INPUTS 8		// Number of vmix inputs to allow tally for 
 #define NUM_ATEM_INPUTS 8		// Number of ATEM inputs to allow tally for
-// #define NUM_TALLIES			NUM_ATEM_INPUTS		// Number of tally lights to transmit data to (must be >= to NUM_ATEM)
 
 // Midi starting notes
 // * indicates note asociated with 'input 1' to listen to 
@@ -79,9 +76,7 @@ ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Addre
 #define MIDI_ON					0x7F 	// 'On' value of received midi note
 #define MIDI_OFF				0x00  // 'Off' value of received midi note
 
-#define VMIX_INPUT_TALLY 0		// Input number to generate combined ATEM tally data from
-
-uint8_t vMixATEMInputNum = 0;							// Input number associated with ATEM switcher (actually refers to program midi number)
+#define VMIX_ATEM_INUM 	1			// Input number associated with ATEM switcher (actually refers to program midi number)
 
 //////////////////// GLOBAL VARIABLES ////////////////////
 
@@ -91,6 +86,7 @@ bool ATEMInputState[2][NUM_ATEM_INPUTS];
 bool newATEMData = true;									// Data is transmitted to tally receivers on a change
 bool vMixATEMChange = true; 							// Indicates change in Prev/Prog state of ATEM input within vMix
 
+bool newExtTally = true;									// Indicates when external tally status has changed
 
 
 uint8_t tallyState[NUM_ATEM_INPUTS];	// Holds current state of all tally lights
@@ -185,10 +181,11 @@ void loop()
 		}
 	} while (rx.header != 0);
 
-	UpdateEXTTallyState();
-	PrintTallyArray();
-	LightLEDs_EXTTally();
-	sendData();
+	CheckvMixATEMChange();		// Check if we need to transmit tally data via radio
+	UpdateEXTTallyState();		// Update tally array
+	PrintTallyArray(); 				// to serial
+	LightLEDs_EXTTally(); 		// light up local LEDs
+	sendData();								// Send data to tally lights via radio
 	
 }
 
@@ -258,7 +255,7 @@ void LightLEDs_EXTTally()
 
 void sendData() 
 {
-	if (newMIDIData == true) 
+	if (newExtTally == true) 
 	{
 		//Print Sent Data to Serial Port
 		Serial.print("Sent Data: ");
@@ -272,8 +269,9 @@ void sendData()
 
 		//Sent the Data over RF
 		myRadio.write(&tallyState, sizeof(tallyState));
-		newMIDIData = false;  
+		newExtTally = false;  
 	}
+
 	return;
 }
 
@@ -304,7 +302,7 @@ void UpdateEXTTallyState()
 
 	// Check ATEM is in Prev/Prog within vmix
 
-	if (vMixInputState[PROGRAM][vMixATEMInputNum])
+	if (vMixInputState[PROGRAM][VMIX_ATEM_INUM])
 	{
 		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
 		{
@@ -316,7 +314,7 @@ void UpdateEXTTallyState()
 				tallyState[i] = TALLY_OFF;
 		}
 	}
-	else if (vMixInputState[PREVIEW][vMixATEMInputNum])
+	else //if (vMixInputState[PREVIEW][VMIX_ATEM_INUM])
 	{
 		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
 		{
@@ -326,6 +324,21 @@ void UpdateEXTTallyState()
 				tallyState[i] = TALLY_OFF;
 		}
 	}
+
+	// else
+	// {
+	// 	for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+	// 	{
+	// 		tallyState[i] = TALLY_OFF;
+	// 		// if (ATEMInputState[PROGRAM][i])
+	// 		// 	tallyState[i] = TALLY_PREV;
+	// 		// else
+	// 		// 	tallyState[i] = TALLY_OFF;
+	// 	}	
+	// }
+
+
+	// NOTE! - Uncomment above lines in function to turn off all camera tallies when ATEM input in vmix is neither prog nor prev
 
 	return;
 }
@@ -404,19 +417,27 @@ void SetVMIXTallyState(uint8_t MIDI_Note, uint8_t MIDI_Value)
 void CheckvMixATEMChange()
 {
 	// Checks if prev/prog state of ATEM input within vMix has changed
-	static uint8_t lastProg = 0;
-	static uint8_t lastPrev = 0;
+	static bool lastProg = 0;
+	static bool lastPrev = 0;
 
-	if (vMixInputState[PROGRAM][vMixATEMInputNum] != lastProg)
+	if (vMixInputState[PROGRAM][VMIX_ATEM_INUM] != lastProg)
 	{
 		vMixATEMChange = true;
-		lastProg = vMixInputState[PROGRAM][vMixATEMInputNum];
+		lastProg = vMixInputState[PROGRAM][VMIX_ATEM_INUM];
 	}
 
-	if (vMixInputState[PREVIEW][vMixATEMInputNum] != lastPrev)
+	if (vMixInputState[PREVIEW][VMIX_ATEM_INUM] != lastPrev)
 	{
 		vMixATEMChange = true;
-		lastPrev = vMixInputState[PREVIEW][vMixATEMInputNum];
+		lastPrev = vMixInputState[PREVIEW][VMIX_ATEM_INUM];
+	}
+
+	// If on vMix prog/prev & newATEM data || vMixAtemChange
+	if (vMixATEMChange || ((lastProg || lastPrev) && newATEMData))
+	{
+		newATEMData = false;
+		vMixATEMChange = false;
+		newExtTally = true;
 	}
 
 	return;
