@@ -49,8 +49,8 @@ void setup()
 	myRadio.startListening();
 
 	// Setup Pixel LEDs
-	FastLED.addLeds<WS2812B, LED_F_PIN, GRB>(leds, NUM_LEDS_F);
-	FastLED.addLeds<WS2812B, LED_B_PIN, GRB>(leds, NUM_LEDS_B);
+	FastLED.addLeds<WS2812B, LED_F_PIN, GRB>(ledsFront, NUM_LEDS_F);
+	FastLED.addLeds<WS2812B, LED_B_PIN, GRB>(ledsBack, NUM_LEDS_B);
 	FastLED.setBrightness(LED_BRIGHTNESS);
 	clearLEDs();
 	FastLED.show();
