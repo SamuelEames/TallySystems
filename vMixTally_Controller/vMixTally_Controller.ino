@@ -6,7 +6,7 @@
 #include <ATEM.h>
 
 //////////////////// RF Variables ////////////////////
-RF24 myRadio (7, 8); // CE, CSN
+RF24 myRadio (19, 18); // CE, CSN
 byte addresses[][6] = {"973126"};
 
 const byte numChars = 32;
@@ -86,7 +86,7 @@ bool ATEMInputState[2][NUM_ATEM_INPUTS];
 bool newATEMData = true;									// Data is transmitted to tally receivers on a change
 bool vMixATEMChange = true; 							// Indicates change in Prev/Prog state of ATEM input within vMix
 
-bool newExtTally = true;									// Indicates when external tally status has changed
+bool newExtTally = false;									// Indicates when external tally status has changed
 
 
 uint8_t tallyState[NUM_ATEM_INPUTS];	// Holds current state of all tally lights
@@ -195,15 +195,6 @@ void loop()
 void LightLEDs_ATEM()
 {
 	// Lights local LEDs based off ATEM prog/Prev data
-
-	// for (int i = 0; i < NUM_LEDS; ++i)
-	// {
-	// 	if (TallyStatus[i] == 0x7F)
-	// 		leds[i] = COL_RED;
-	// 	else
-	// 		leds[i] = COL_BLUE;
-	// }
-
 	for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
 	{
 		if (ATEMInputState[PROGRAM][i])
