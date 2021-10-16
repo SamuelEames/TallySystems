@@ -5,17 +5,18 @@
 #include <Ethernet.h>
 #include <ATEM.h>
 
-//////////////////// RF Variables ////////////////////
-RF24 myRadio (19, 18); // CE, CSN
-byte addresses[][6] = {"973126"};
+#include "ENUMVars.h"
 
-const byte numChars = 32;
-char receivedChars[numChars];
-boolean newMIDIData = false;
+
+///////////////////////// IO /////////////////////////
+#define LED_PIN 		6
+#define RF_CSN_PIN		18
+#define RF_CE_PIN 		19
+
 
 //////////////////// Pixel Setup ////////////////////
-#define NUM_LEDS 12
-#define DATA_PIN 21
+#define NUM_LEDS 8
+// #define DATA_PIN 6
 CRGB leds[NUM_LEDS]; // Define the array of leds
 
 #define LED_BRIGHTNESS 5
@@ -29,6 +30,28 @@ CRGB leds[NUM_LEDS]; // Define the array of leds
 #define COL_PURPLE  0xB600FF
 #define COL_WHITE   0xFFFF7F
 #define COL_BLACK   0x000000
+
+
+//////////////////// RF Variables ////////////////////
+#define MAX_TALLY_NODES 	9 				// Note: includes contrroller as a node
+
+RF24 radio(RF_CE_PIN, RF_CSN_PIN);
+// byte addresses[][6] = {"973126"};
+
+uint8_t addrStartCode[] = "TALY";		// First 4 bytes of node addresses (5th byte on each is node ID - set later)
+uint8_t nodeAddr[MAX_TALLY_NODES][5]; 	
+
+
+#define RF_BUFF_LEN 6						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
+uint8_t radioBuf_RX[RF_BUFF_LEN];
+uint8_t radioBuf_TX[RF_BUFF_LEN];
+bool newRFData = false;						// True if new data over radio just in
+
+uint8_t myID = 0;						// master = 0
+
+// const byte numChars = 32;
+// char receivedChars[numChars];
+// boolean newMIDIData = false;
 
 //////////////////// ATEM SETUP ////////////////////
 
@@ -44,20 +67,21 @@ IPAddress ip(10, 10, 201, 107);        // ARDUINO IP ADDRESS
 
 // Connect to an ATEM switcher on this address and using this local port:
 // The port number is chosen randomly among high numbers.
-ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Address
+// ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Address
+ATEM AtemSwitcher(IPAddress(10, 10, 201, 110), 56417); // ATEM Switcher IP Address
 
 
 //////////////////// MISC VARIABLES ////////////////////
-// Used with vMix & ATEM tally data arrays
-#define PROGRAM 				0
-#define PREVIEW 				1
-#define AUDIOON 				2
+// // Used with vMix & ATEM tally data arrays
+// #define PROGRAM 				0
+// #define PREVIEW 				1
+// #define AUDIOON 				2
 
-// Values used in master tally array to indicate each state
-#define TALLY_OFF				0
-#define TALLY_AUDI			1
-#define TALLY_PREV			2
-#define TALLY_PROG			3
+// // Values used in master tally array to indicate each state
+// #define INPUTOFF				0
+// #define AUDIOON			1
+// #define PREVIEW			2
+// #define PROGRAM			3
 
 
 //////////////////// PARAMETERS (EDIT AS REQUIRED) ////////////////////
@@ -76,21 +100,22 @@ ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Addre
 #define MIDI_ON					0x7F 	// 'On' value of received midi note
 #define MIDI_OFF				0x00  // 'Off' value of received midi note
 
-#define VMIX_ATEM_INUM 	1			// Input number associated with ATEM switcher (actually refers to program midi number)
+#define VMIX_ATEM_INUM 	0			// vMix Input number associated with ATEM switcher (actually refers to program midi number)
 
 //////////////////// GLOBAL VARIABLES ////////////////////
 
 bool vMixInputState[3][NUM_VMIX_INPUTS]; 	// 0: program on, 1: preview on, 3: audio on
 bool ATEMInputState[2][NUM_ATEM_INPUTS];
 
-bool newATEMData = true;									// Data is transmitted to tally receivers on a change
-bool vMixATEMChange = true; 							// Indicates change in Prev/Prog state of ATEM input within vMix
+// bool newATEMData = true;									// Data is transmitted to tally receivers on a change
+// bool vMixATEMChange = true; 							// Indicates change in Prev/Prog state of ATEM input within vMix
 
 bool newExtTally = false;									// Indicates when external tally status has changed
 
 
-uint8_t tallyState[NUM_ATEM_INPUTS];	// Holds current state of all tally lights
-
+uint8_t tallyState[NUM_ATEM_INPUTS];				// Holds current state of all tally lights
+uint8_t tallyState_Last[NUM_ATEM_INPUTS];			// Last state of tally lights
+	
 
 
 //////////////////// MIDI Setup ////////////////////
@@ -114,25 +139,50 @@ void setup()
 {
 	Serial.begin(115200);
 
-	//Setup Radio Transmitter
-	myRadio.begin();  
-	myRadio.setChannel(115);
-	myRadio.setPALevel(RF24_PA_MAX);
-	myRadio.setDataRate( RF24_250KBPS );
-	myRadio.openWritingPipe( addresses[0]);
+	// Initialise Radio
+
+	// Generate node addresses
+	for (uint8_t i = 0; i < MAX_TALLY_NODES; ++i)
+	{
+		for (uint8_t j = 0; j < 4; ++j)	// Set first four bytes of address to same code
+			nodeAddr[i][j] = addrStartCode[j];
+
+		nodeAddr[i][4] = i;					// Unique 5th byte according to node address
+	}
+
+	radio.begin();  
+	radio.setAutoAck(1);						// Ensure autoACK is enabled
+	radio.enableAckPayload();				// Allow optional ack payloads
+	radio.setRetries(0,5);					// Smallest time between retries, (max no. of retries is 15)
+ 	radio.setPayloadSize(RF_BUFF_LEN);	// Here we are sending 1-byte payloads to test the call-response speed
+ 
+	radio.setChannel(108);					// Keep out of way of common wifi frequencies
+	radio.setPALevel(RF24_PA_HIGH);		// Let's make this powerful... later
+	radio.setDataRate( RF24_2MBPS );		// Let's make this quick
+
+	// Opening Listening pipe
+	radio.openReadingPipe(1, nodeAddr[myID]);
+	radio.writeAckPayload(1, radioBuf_TX, RF_BUFF_LEN); 	// Setup AckPayload
+
+
+	// myRadio.begin();  
+	// myRadio.setChannel(115);
+	// myRadio.setPALevel(RF24_PA_MAX);
+	// myRadio.setDataRate( RF24_250KBPS );
+	// myRadio.openWritingPipe( addresses[0]);
 
 	// Setup Pixel LEDs
-	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
+	FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
 
-	for (int i = 0; i < NUM_LEDS; ++i)	// Clear LEDs
-		leds[i] = COL_BLACK;
+	fill_solid(leds, NUM_LEDS, COL_BLACK); // Clear LEDs
+
 
 	FastLED.setBrightness(LED_BRIGHTNESS);
 
 	FastLED.show();
 
-	for (int i = 0; i < NUM_ATEM_INPUTS; ++i)	// clear tally light array
-		tallyState[i] = TALLY_OFF;
+	for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)	// clear tally light array
+		tallyState[i] = INPUTOFF;
 
 
 	// Start the Ethernet, Serial (debugging) and UDP:
@@ -153,9 +203,47 @@ void setup()
 
 void loop() 
 {
-	AtemSwitcher.runLoop();
-	GetATEMTallyState();
+	// GET TALLY INFO FROM ATEM & VMIX
+	AtemSwitcher.runLoop();				// Check Atem state
+	getATEMTallyState();					// Extract Atem tally data
 
+	checkMIDI();							// Check vMix state
+	// getVMIXTallyState();					// Extract vmix tally data
+	checkVMixATEMTallyState(); 		// Check if ATEM input within vMix has changed state
+
+	// UPDATE LOCAL TALLY ARRAYS
+	UpdateEXTTallyState();	
+
+
+	// IF IT'S CHANGED TRANSMIT TO EVERYONE! (ideally just to associated nodes, but eh.. maybe update this in future)
+
+	// Check if tally data changed
+	if (memcmp(tallyState_Last, tallyState, sizeof(tallyState)) != 0)
+	{
+		memcpy(tallyState_Last, tallyState, sizeof(tallyState)); // save data for next time
+		TX_Tallies(0);					// Transmit data
+		Serial.println("Tally data changed");
+	}
+
+
+	// UPDATE NODES AT LEAST EVERY SECOND
+
+	// checkVMixATEMTallyState();		// Check if we need to transmit tally data via radio
+
+	// if it changed or timer elapsed then TX_Tallies();
+
+	PrintTallyArray(); 				// Print to serial on receiving serial data
+	// sendData();								// Send data to tally lights via radio
+	
+	LightLEDs_EXTTally(); 		// light up local LEDs
+}
+
+
+bool checkMIDI()
+{
+	bool newMIDIData = false;
+
+	// Get Midi Data
 	midiEventPacket_t rx;
 	do 
 	{
@@ -174,19 +262,13 @@ void loop()
 
 			// Write MIDI tally data to TallyArray
 			if ((rx.byte1 & 0x0F) == MIDI_CHAN_NUM)
-			{
-				SetVMIXTallyState(rx.byte2, rx.byte3);
-			}
+				getVMIXTallyState(rx.byte2, rx.byte3);
+
 			newMIDIData = true;			
 		}
 	} while (rx.header != 0);
 
-	CheckvMixATEMChange();		// Check if we need to transmit tally data via radio
-	UpdateEXTTallyState();		// Update tally array
-	PrintTallyArray(); 				// to serial
-	LightLEDs_EXTTally(); 		// light up local LEDs
-	sendData();								// Send data to tally lights via radio
-	
+	return newMIDIData;
 }
 
 
@@ -216,19 +298,19 @@ void LightLEDs_EXTTally()
 {
 	// Lights local LEDs to match external tally lights
 
-	for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+	for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)
 	{
 		switch (tallyState[i]) 
 		{
-			case TALLY_OFF:
+			case INPUTOFF:
 				leds[i] = COL_BLACK;
 				break;
 
-			case TALLY_PREV:
+			case PREVIEW:
 				leds[i] = COL_GREEN;
 				break;
 
-			case TALLY_PROG:
+			case PROGRAM:
 				leds[i] = COL_RED;
 				break;
 
@@ -244,24 +326,79 @@ void LightLEDs_EXTTally()
 }
 
 
-void sendData() 
+// void sendData() 
+// {
+// 	if (newExtTally == true) 
+// 	{
+// 		//Print Sent Data to Serial Port
+// 		Serial.print("Sent Data: ");
+// 		for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)
+// 		{
+// 			Serial.print(tallyState[i], HEX);
+// 			Serial.print(", \t");
+// 		}
+
+// 		Serial.println();
+
+// 		//Sent the Data over RF
+// 		myRadio.write(&tallyState, sizeof(tallyState));
+// 		newExtTally = false;  
+// 	}
+
+// 	return;
+// }
+
+void TX_Tallies(uint8_t ID)
 {
-	if (newExtTally == true) 
+	// Transmits tally data to tallies that need it
+	Serial.println("TX_Tallies");
+	radio.stopListening();
+
+	if (ID == 0) // Update ALL tallies
 	{
-		//Print Sent Data to Serial Port
-		Serial.print("Sent Data: ");
-		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+		for (uint8_t i = 1; i < MAX_TALLY_NODES; ++i)			// Note: '0' is master (me) so skip that one
 		{
-			Serial.print(tallyState[i], HEX);
-			Serial.print(", \t");
+			// Serial.println(i);
+			Serial.print("MyAddress = ");
+			for (uint8_t j = 0; j < 4; ++j)
+				Serial.write(nodeAddr[i][j]);
+			Serial.println(nodeAddr[i][4]);
+
+
+			getTXBuf(i);
+			radio.openWritingPipe(nodeAddr[i]);
+			radio.write(radioBuf_TX, RF_BUFF_LEN, 0); 			// Transmit message & wait for ack (blocking function)
+			
+			while (radio.available())
+				radio.read(radioBuf_RX, RF_BUFF_LEN); 				// flush ack responses
 		}
-
-		Serial.println();
-
-		//Sent the Data over RF
-		myRadio.write(&tallyState, sizeof(tallyState));
-		newExtTally = false;  
 	}
+	else   					// Only update given tally ID
+	{
+		Serial.print("Transmitting to ");
+
+		Serial.println(ID);
+		getTXBuf(ID);
+		radio.openWritingPipe(nodeAddr[ID]);
+		radio.write(radioBuf_TX, RF_BUFF_LEN, 0); 
+		while (radio.available())
+			radio.read(radioBuf_RX, RF_BUFF_LEN); 				// flush ack response
+	}
+
+	radio.startListening();
+
+	return;
+}
+
+void getTXBuf(uint8_t tallyNum)
+{
+	// Generates data to transmit to given tally number
+	radioBuf_TX[0] = 255;
+	radioBuf_TX[1] = 127;
+	radioBuf_TX[2] = 0;
+	radioBuf_TX[3] = 200;
+	radioBuf_TX[4] = 100;
+	radioBuf_TX[5] = 50;
 
 	return;
 }
@@ -274,7 +411,7 @@ void PrintTallyArray()
 
 		Serial.print("Tally Buffer = ");
 
-		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+		for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)
 		{
 			Serial.print(tallyState[i], HEX);
 			Serial.print(", \t");
@@ -295,24 +432,24 @@ void UpdateEXTTallyState()
 
 	if (vMixInputState[PROGRAM][VMIX_ATEM_INUM])
 	{
-		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+		for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)
 		{
 			if (ATEMInputState[PROGRAM][i])
-				tallyState[i] = TALLY_PROG;
+				tallyState[i] = PROGRAM;
 			else if (ATEMInputState[PREVIEW][i])
-				tallyState[i] = TALLY_PREV;
+				tallyState[i] = PREVIEW;
 			else
-				tallyState[i] = TALLY_OFF;
+				tallyState[i] = INPUTOFF;
 		}
 	}
 	else //if (vMixInputState[PREVIEW][VMIX_ATEM_INUM])
 	{
-		for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
+		for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)
 		{
 			if (ATEMInputState[PROGRAM][i])
-				tallyState[i] = TALLY_PREV;
+				tallyState[i] = PREVIEW;
 			else
-				tallyState[i] = TALLY_OFF;
+				tallyState[i] = INPUTOFF;
 		}
 	}
 
@@ -320,11 +457,11 @@ void UpdateEXTTallyState()
 	// {
 	// 	for (int i = 0; i < NUM_ATEM_INPUTS; ++i)
 	// 	{
-	// 		tallyState[i] = TALLY_OFF;
+	// 		tallyState[i] = INPUTOFF;
 	// 		// if (ATEMInputState[PROGRAM][i])
-	// 		// 	tallyState[i] = TALLY_PREV;
+	// 		// 	tallyState[i] = PREVIEW;
 	// 		// else
-	// 		// 	tallyState[i] = TALLY_OFF;
+	// 		// 	tallyState[i] = INPUTOFF;
 	// 	}	
 	// }
 
@@ -335,9 +472,10 @@ void UpdateEXTTallyState()
 }
 
 
-void GetATEMTallyState()
+bool getATEMTallyState()
 {
-	// Get Tally data & note if it's changed since last time.
+	// Extract Atem Tally data & note if it's changed since last time.
+	bool newATEMData = false;
 
 	for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)
 	{
@@ -366,11 +504,11 @@ void GetATEMTallyState()
 		}
 	}
 
-	return;
+	return newATEMData;
 }
 
 
-void SetVMIXTallyState(uint8_t MIDI_Note, uint8_t MIDI_Value)
+void getVMIXTallyState(uint8_t MIDI_Note, uint8_t MIDI_Value)
 {
 	// Writes midi data to vMix tally array
 
@@ -389,27 +527,29 @@ void SetVMIXTallyState(uint8_t MIDI_Note, uint8_t MIDI_Value)
 	if (MIDI_Note < NUM_VMIX_INPUTS)										// Program
 		vMixInputState[PROGRAM][MIDI_Note] = state;
 
-	else if (MIDI_Note < NUM_VMIX_INPUTS + MIDI_PREV) 	// Preview
+	else if (MIDI_Note < NUM_VMIX_INPUTS + MIDI_PREV) 				// Preview
 		vMixInputState[PREVIEW][MIDI_Note - MIDI_PREV] = state;
 
-	else if (MIDI_Note < NUM_VMIX_INPUTS + MIDI_AUDI)		// Audio on
+	else if (MIDI_Note < NUM_VMIX_INPUTS + MIDI_AUDI)				// Audio on
 		vMixInputState[AUDIOON][MIDI_Note - MIDI_AUDI] = state;
 
 	else
 		return;
 
 
-	CheckvMixATEMChange();
+	// checkVMixATEMTallyState();
 
 	return;
 }
 
 
-void CheckvMixATEMChange()
+bool checkVMixATEMTallyState()
 {
 	// Checks if prev/prog state of ATEM input within vMix has changed
 	static bool lastProg = 0;
 	static bool lastPrev = 0;
+
+	bool vMixATEMChange = false;
 
 	if (vMixInputState[PROGRAM][VMIX_ATEM_INUM] != lastProg)
 	{
@@ -423,13 +563,13 @@ void CheckvMixATEMChange()
 		lastPrev = vMixInputState[PREVIEW][VMIX_ATEM_INUM];
 	}
 
-	// If on vMix prog/prev & newATEM data || vMixAtemChange
-	if (vMixATEMChange || ((lastProg || lastPrev) && newATEMData))
-	{
-		newATEMData = false;
-		vMixATEMChange = false;
-		newExtTally = true;
-	}
+	// // If on vMix prog/prev & newATEM data || vMixAtemChange
+	// if (vMixATEMChange || ((lastProg || lastPrev) && newATEMData))
+	// {
+	// 	newATEMData = false;
+	// 	vMixATEMChange = false;
+	// 	newExtTally = true;
+	// }
 
-	return;
+	return vMixATEMChange;
 }

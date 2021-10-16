@@ -13,7 +13,7 @@
 
 
 //////////////////// RF Variables ////////////////////
-#define MAX_TALLY_NODES 	8
+#define MAX_TALLY_NODES 	9 				// Note: includes contrroller as a node
 RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 // byte addresses[][6] = {"973126"};
 
@@ -22,9 +22,9 @@ uint8_t addrStartCode[] = "TALY";		// First 4 bytes of node addresses (5th byte 
 uint8_t nodeAddr[MAX_TALLY_NODES][5]; 	
 
 
-#define RF_BUFF_LEN 2						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
-uint32_t radioBuf_RX[RF_BUFF_LEN];
-uint32_t radioBuf_TX[RF_BUFF_LEN];
+#define RF_BUFF_LEN 6						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
+uint8_t radioBuf_RX[RF_BUFF_LEN];
+uint8_t radioBuf_TX[RF_BUFF_LEN];
 bool newRFData = false;						// True if new data over radio just in
 uint8_t myID = 2;						// master = 0 - TODO update this to get value from BCD switch
 
@@ -80,7 +80,7 @@ void setup()
 	radio.begin();  
 	radio.setAutoAck(1);						// Ensure autoACK is enabled
 	radio.enableAckPayload();				// Allow optional ack payloads
-	radio.setRetries(0,15);					// Smallest time between retries, (max no. of retries is 15)
+	radio.setRetries(0,5);					// Smallest time between retries, (max no. of retries is 15)
  	radio.setPayloadSize(RF_BUFF_LEN);	// Here we are sending 1-byte payloads to test the call-response speed
  
 	radio.setChannel(108);					// Keep out of way of common wifi frequencies
@@ -114,6 +114,13 @@ void setup()
 	fill_solid(ledsBack, NUM_LEDS_B, COL_PURPLE);
 
 	FastLED.show();
+
+	while (!Serial) ; 
+	Serial.print("MyAddress = ");
+	for (uint8_t i = 0; i < 4; ++i)
+		Serial.write(nodeAddr[myID][i]);
+	Serial.println(nodeAddr[myID][4]);
+
 	delay(1000);
 
 }
@@ -177,8 +184,8 @@ void LightLEDs()
 {
 	// Lights LEDs based off given values
 	// TODO - add local brightness override for back LEDs (based off light sensor)
-	fill_solid( ledsFront, NUM_LEDS_F, radioBuf_RX[0] );
-	fill_solid( ledsBack,  NUM_LEDS_B, radioBuf_RX[1] );
+	fill_solid( ledsFront, NUM_LEDS_F, CRGB( radioBuf_RX[0], radioBuf_RX[1], radioBuf_RX[2]) );
+	fill_solid( ledsBack,  NUM_LEDS_B, CRGB( radioBuf_RX[3], radioBuf_RX[4], radioBuf_RX[5]) );
 
 	FastLED.show();
 	return;
@@ -219,6 +226,17 @@ bool CheckRF()
 		radio.read(radioBuf_RX, RF_BUFF_LEN);
 		radio.writeAckPayload(1, radioBuf_TX, RF_BUFF_LEN ); 	//Note: need to re-write ack payload after each use
 		newMessage = true;
+
+		// while (radio.available())
+		// 	radio.read(radioBuf_RX, RF_BUFF_LEN); 				// flush ack responses
+
+		Serial.print("Message Received! = ");
+		for (uint8_t i = 0; i < RF_BUFF_LEN; ++i)
+		{
+			Serial.print(radioBuf_RX[i], DEC);
+			Serial.print("\t");
+		}
+		Serial.println();
 	}
 
 	return newMessage;
