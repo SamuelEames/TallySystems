@@ -19,7 +19,7 @@
 // #define DATA_PIN 6
 CRGB leds[NUM_LEDS]; // Define the array of leds
 
-#define LED_BRIGHTNESS 5
+#define LED_BRIGHTNESS 10
 
 // Colours!
 #define COL_RED     0xFF0000
@@ -40,9 +40,10 @@ RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 
 uint8_t addrStartCode[] = "TALY";		// First 4 bytes of node addresses (5th byte on each is node ID - set later)
 uint8_t nodeAddr[MAX_TALLY_NODES][5]; 	
+bool nodePresent[MAX_TALLY_NODES]; 		// Used to indicate whether a receiving node responded to a message or not
 
 
-#define RF_BUFF_LEN 6						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
+#define RF_BUFF_LEN 1						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
 uint8_t radioBuf_RX[RF_BUFF_LEN];
 uint8_t radioBuf_TX[RF_BUFF_LEN];
 bool newRFData = false;						// True if new data over radio just in
@@ -68,7 +69,7 @@ IPAddress ip(10, 10, 201, 107);        // ARDUINO IP ADDRESS
 // Connect to an ATEM switcher on this address and using this local port:
 // The port number is chosen randomly among high numbers.
 // ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Address
-ATEM AtemSwitcher(IPAddress(10, 10, 201, 110), 56417); // ATEM Switcher IP Address
+ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Address
 
 
 //////////////////// MISC VARIABLES ////////////////////
@@ -138,6 +139,7 @@ uint8_t tallyState_Last[NUM_ATEM_INPUTS];			// Last state of tally lights
 void setup() 
 {
 	Serial.begin(115200);
+	while (!Serial) ; 
 
 	// Initialise Radio
 
@@ -150,26 +152,13 @@ void setup()
 		nodeAddr[i][4] = i;					// Unique 5th byte according to node address
 	}
 
-	radio.begin();  
-	radio.setAutoAck(1);						// Ensure autoACK is enabled
-	radio.enableAckPayload();				// Allow optional ack payloads
-	radio.setRetries(0,5);					// Smallest time between retries, (max no. of retries is 15)
- 	radio.setPayloadSize(RF_BUFF_LEN);	// Here we are sending 1-byte payloads to test the call-response speed
- 
-	radio.setChannel(108);					// Keep out of way of common wifi frequencies
-	radio.setPALevel(RF24_PA_HIGH);		// Let's make this powerful... later
-	radio.setDataRate( RF24_2MBPS );		// Let's make this quick
+	radio.begin();
+	radio.setChannel(108);					// Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
+	radio.setPALevel(RF24_PA_HIGH);		// Let's make this powerful... later (RF24_PA_MAX)
+	radio.setDataRate(RF24_2MBPS);		// Let's make this quick
+	radio.setRetries(0,5); 					// Smallest time between retries (delay, count)
+	// Note: writing pipe opened when we know who we want to talk to
 
-	// Opening Listening pipe
-	radio.openReadingPipe(1, nodeAddr[myID]);
-	radio.writeAckPayload(1, radioBuf_TX, RF_BUFF_LEN); 	// Setup AckPayload
-
-
-	// myRadio.begin();  
-	// myRadio.setChannel(115);
-	// myRadio.setPALevel(RF24_PA_MAX);
-	// myRadio.setDataRate( RF24_250KBPS );
-	// myRadio.openWritingPipe( addresses[0]);
 
 	// Setup Pixel LEDs
 	FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
@@ -250,14 +239,14 @@ bool checkMIDI()
 		rx = MidiUSB.read();
 		if (rx.header != 0) 
 		{
-			Serial.print("Received: ");
-			Serial.print(rx.header, HEX);	// event type (0x0B = control change).
-			Serial.print("-");
-			Serial.print(rx.byte1, HEX);	// event type, combined with the channel.
-			Serial.print("-");
-			Serial.print(rx.byte2, HEX);	// Note
-			Serial.print("-");
-			Serial.println(rx.byte3, HEX); 	// Velocity
+			// Serial.print("Received: ");
+			// Serial.print(rx.header, HEX);	// event type (0x0B = control change).
+			// Serial.print("-");
+			// Serial.print(rx.byte1, HEX);	// event type, combined with the channel.
+			// Serial.print("-");
+			// Serial.print(rx.byte2, HEX);	// Note
+			// Serial.print("-");
+			// Serial.println(rx.byte3, HEX); 	// Velocity
 
 
 			// Write MIDI tally data to TallyArray
@@ -300,6 +289,7 @@ void LightLEDs_EXTTally()
 
 	for (uint8_t i = 0; i < NUM_ATEM_INPUTS; ++i)
 	{
+
 		switch (tallyState[i]) 
 		{
 			case INPUTOFF:
@@ -318,6 +308,12 @@ void LightLEDs_EXTTally()
 				// statements
 				break;
 		}
+
+
+		if (nodePresent[i+1]) 		// Low white glow for present nodes
+			leds[i] += 0x101010; 
+		else
+			leds[i] %= 20; 			// Dim tally colours of absent nodes
 	}	
 
 	FastLED.show();
@@ -348,57 +344,46 @@ void LightLEDs_EXTTally()
 // 	return;
 // }
 
+
 void TX_Tallies(uint8_t ID)
 {
 	// Transmits tally data to tallies that need it
 	Serial.println("TX_Tallies");
-	radio.stopListening();
 
 	if (ID == 0) // Update ALL tallies
 	{
-		for (uint8_t i = 1; i < MAX_TALLY_NODES; ++i)			// Note: '0' is master (me) so skip that one
+		for (uint8_t i = 1; i < MAX_TALLY_NODES; ++i)
 		{
-			// Serial.println(i);
-			Serial.print("MyAddress = ");
-			for (uint8_t j = 0; j < 4; ++j)
-				Serial.write(nodeAddr[i][j]);
-			Serial.println(nodeAddr[i][4]);
-
-
-			getTXBuf(i);
+			radio.stopListening();
 			radio.openWritingPipe(nodeAddr[i]);
-			radio.write(radioBuf_TX, RF_BUFF_LEN, 0); 			// Transmit message & wait for ack (blocking function)
-			
-			while (radio.available())
-				radio.read(radioBuf_RX, RF_BUFF_LEN); 				// flush ack responses
+			getTXBuf(i);
+
+			if (radio.write( &radioBuf_TX, RF_BUFF_LEN )) 
+				nodePresent[i] = true;
+			else 
+				nodePresent[i] = false;
 		}
 	}
 	else   					// Only update given tally ID
 	{
-		Serial.print("Transmitting to ");
-
-		Serial.println(ID);
-		getTXBuf(ID);
+		radio.stopListening();
 		radio.openWritingPipe(nodeAddr[ID]);
-		radio.write(radioBuf_TX, RF_BUFF_LEN, 0); 
-		while (radio.available())
-			radio.read(radioBuf_RX, RF_BUFF_LEN); 				// flush ack response
-	}
+		getTXBuf(ID);
 
-	radio.startListening();
+		if (radio.write( &radioBuf_TX, RF_BUFF_LEN )) 
+			nodePresent[ID] = true;
+		else 
+			nodePresent[ID] = false;
+	}
 
 	return;
 }
 
+
 void getTXBuf(uint8_t tallyNum)
 {
 	// Generates data to transmit to given tally number
-	radioBuf_TX[0] = 255;
-	radioBuf_TX[1] = 127;
-	radioBuf_TX[2] = 0;
-	radioBuf_TX[3] = 200;
-	radioBuf_TX[4] = 100;
-	radioBuf_TX[5] = 50;
+	radioBuf_TX[0] = tallyState[tallyNum-1] /* | 1U >> (tallyBrightness +2) */ ;
 
 	return;
 }

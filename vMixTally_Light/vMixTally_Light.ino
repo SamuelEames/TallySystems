@@ -22,13 +22,13 @@ uint8_t addrStartCode[] = "TALY";		// First 4 bytes of node addresses (5th byte 
 uint8_t nodeAddr[MAX_TALLY_NODES][5]; 	
 
 
-#define RF_BUFF_LEN 6						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
+#define RF_BUFF_LEN 1						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
 uint8_t radioBuf_RX[RF_BUFF_LEN];
-uint8_t radioBuf_TX[RF_BUFF_LEN];
+// uint8_t radioBuf_TX[RF_BUFF_LEN];
 bool newRFData = false;						// True if new data over radio just in
-uint8_t myID = 2;						// master = 0 - TODO update this to get value from BCD switch
+uint8_t myID = 7;						// master = 0 - TODO update this to get value from BCD switch
 
-#define TALLY_NUM 	3				// tally number to respond to 2, 4, 5, 6, 3, 7
+// #define TALLY_NUM 	3				// tally number to respond to 2, 4, 5, 6, 3, 7
 // #define TALLY_ON		0x7F 		// 'on' value of tally light
 
 // Values used in master tally array to indicate each state
@@ -77,32 +77,12 @@ void setup()
 		nodeAddr[i][4] = i;					// Unique 5th byte according to node address
 	}
 
-	radio.begin();  
-	radio.setAutoAck(1);						// Ensure autoACK is enabled
-	radio.enableAckPayload();				// Allow optional ack payloads
-	radio.setRetries(0,5);					// Smallest time between retries, (max no. of retries is 15)
- 	radio.setPayloadSize(RF_BUFF_LEN);	// Here we are sending 1-byte payloads to test the call-response speed
- 
-	radio.setChannel(108);					// Keep out of way of common wifi frequencies
-	radio.setPALevel(RF24_PA_HIGH);		// Let's make this powerful... later
-	radio.setDataRate( RF24_2MBPS );		// Let's make this quick
-
-	// Opening Listening pipe
-	radio.openReadingPipe(1, nodeAddr[myID]);
-
-	radio.openWritingPipe(nodeAddr[0]);
-	radioBuf_TX[0] = myID;				// Always respond with myID to master
-	radio.startListening();
-
-	radio.writeAckPayload(1, radioBuf_TX, RF_BUFF_LEN); 	// Setup AckPayload
-
-	//Initialise Reciever
-	// myRadio.begin(); 
-	// myRadio.setChannel(115); 
-	// myRadio.setPALevel(RF24_PA_MAX);
-	// myRadio.setDataRate( RF24_250KBPS ) ; 
-	// myRadio.openReadingPipe(1, addresses[0]);
-	// myRadio.startListening();
+	radio.begin();
+	radio.setChannel(108);					// Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
+	radio.setPALevel(RF24_PA_HIGH);		// Let's make this powerful... later (RF24_PA_MAX)
+	radio.setDataRate(RF24_2MBPS);		// Let's make this quick
+	radio.openReadingPipe(1, nodeAddr[myID]); // My address to read messages in on
+	radio.startListening();					// Start listening now!
 
 	// Setup Pixel LEDs
 	FastLED.addLeds<WS2812B, LED_F_PIN, GRB>(ledsFront, NUM_LEDS_F);
@@ -121,7 +101,7 @@ void setup()
 		Serial.write(nodeAddr[myID][i]);
 	Serial.println(nodeAddr[myID][4]);
 
-	delay(1000);
+	// delay(1000);
 
 }
 
@@ -132,6 +112,8 @@ void loop()
 	if (CheckRF())
 		LightLEDs();
 
+/*	// CheckRF();
+
 	// //Check if data is recieved over RF
 	// if ( myRadio.available()) 
 	// {
@@ -141,9 +123,34 @@ void loop()
 
 	// 	LightLEDs();
 	// }
+
+	if ( radio.available()) 
+	{
+		//Extract data from RF Reciever
+		// if (radio.available())
+		radio.read( &radioBuf_RX, RF_BUFF_LEN );
+
+		Serial.println("Got em!");
+
+		// LightLEDs();
+	}
 	
+	// if ( radio.available() ) 
+	// {
+	// 	radio.read( &dataReceived, sizeof(dataReceived) );
+	// }*/
+
 
 	// PrintRecDataArray();
+
+
+	// static uint32_t startTime = millis();
+
+	// if (startTime + 1000 < millis())
+	// {
+	// 	startTime = millis();
+	// 	Serial.println("Still running");
+	// }
 	
 }
 
@@ -220,16 +227,24 @@ bool CheckRF()
 	// Checks for updates from controller & updates state accordingly
 	bool newMessage = false;
 
-	while (radio.available())
+	if (radio.available())
 	{
 		// Read in message
-		radio.read(radioBuf_RX, RF_BUFF_LEN);
-		radio.writeAckPayload(1, radioBuf_TX, RF_BUFF_LEN ); 	//Note: need to re-write ack payload after each use
+		radio.read(&radioBuf_RX, RF_BUFF_LEN);
+		// radio.writeAckPayload(1, &radioBuf_TX, RF_BUFF_LEN ); 	//Note: need to re-write ack payload after each use
 		newMessage = true;
+
+		// radioBuf_TX[0] += 1;
+
+		Serial.println("Got em!");
 
 		// while (radio.available())
 		// 	radio.read(radioBuf_RX, RF_BUFF_LEN); 				// flush ack responses
 
+	}
+
+	if (newMessage)
+	{
 		Serial.print("Message Received! = ");
 		for (uint8_t i = 0; i < RF_BUFF_LEN; ++i)
 		{
