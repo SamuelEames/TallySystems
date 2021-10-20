@@ -1,6 +1,17 @@
+// SETUP DEBUG MESSAGES
+// #define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
+#ifdef DEBUG
+	#define DPRINT(...)		Serial.print(__VA_ARGS__)		//DPRINT is a macro, debug print
+	#define DPRINTLN(...)	Serial.println(__VA_ARGS__)	//DPRINTLN is a macro, debug print with new line
+#else
+	#define DPRINT(...)												//now defines a blank line
+	#define DPRINTLN(...)											//now defines a blank line
+#endif
+
+
 #include "FastLED.h"
-// #include <SPI.h>
 #include "RF24.h"
+#include "ENUMVars.h"
 
 
 ///////////////////////// IO /////////////////////////
@@ -10,32 +21,16 @@
 #define LED_B_PIN 		21
 
 
-
-
 //////////////////// RF Variables ////////////////////
-#define MAX_TALLY_NODES 	9 				// Note: includes contrroller as a node
 RF24 radio(RF_CE_PIN, RF_CSN_PIN);
-// byte addresses[][6] = {"973126"};
-
 
 uint8_t addrStartCode[] = "TALY";		// First 4 bytes of node addresses (5th byte on each is node ID - set later)
-uint8_t nodeAddr[MAX_TALLY_NODES][5]; 	
-
+uint8_t nodeAddr[5]; 	
 
 #define RF_BUFF_LEN 1						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
 uint8_t radioBuf_RX[RF_BUFF_LEN];
-// uint8_t radioBuf_TX[RF_BUFF_LEN];
-bool newRFData = false;						// True if new data over radio just in
-uint8_t myID = 7;						// master = 0 - TODO update this to get value from BCD switch
+uint8_t myID = 2;								// controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
 
-// #define TALLY_NUM 	3				// tally number to respond to 2, 4, 5, 6, 3, 7
-// #define TALLY_ON		0x7F 		// 'on' value of tally light
-
-// Values used in master tally array to indicate each state
-#define TALLY_OFF	0
-#define TALLY_AUDI	1
-#define TALLY_PREV	2
-#define TALLY_PROG	3
 
 // Front LEDs - seen by people in front of camera
 #define NUM_LEDS_F 	4 // or wire
@@ -63,25 +58,21 @@ CRGB ledsBack[NUM_LEDS_B];
 
 void setup() 
 {
-	Serial.begin(115200);
+	#ifdef DEBUG
+		Serial.begin(115200);
+		while (!Serial) ; 
+	#endif
 
+	// GET MY ID ... from BCD switch - TODO
+	memcpy(nodeAddr, addrStartCode, 4);	// Generate my node address
+	nodeAddr[4] = myID; 
 
 	// Initialise Radio
-
-	// Generate node addresses
-	for (uint8_t i = 0; i < MAX_TALLY_NODES; ++i)
-	{
-		for (uint8_t j = 0; j < 4; ++j)	// Set first four bytes of address to same code
-			nodeAddr[i][j] = addrStartCode[j];
-
-		nodeAddr[i][4] = i;					// Unique 5th byte according to node address
-	}
-
 	radio.begin();
 	radio.setChannel(108);					// Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
 	radio.setPALevel(RF24_PA_HIGH);		// Let's make this powerful... later (RF24_PA_MAX)
 	radio.setDataRate(RF24_2MBPS);		// Let's make this quick
-	radio.openReadingPipe(1, nodeAddr[myID]); // My address to read messages in on
+	radio.openReadingPipe(1, nodeAddr); // My address to read messages in on
 	radio.startListening();					// Start listening now!
 
 	// Setup Pixel LEDs
@@ -89,68 +80,30 @@ void setup()
 	FastLED.addLeds<WS2812B, LED_B_PIN, GRB>(ledsBack, NUM_LEDS_B);
 	FastLED.setBrightness(LED_BRIGHTNESS);
 
-
 	fill_solid(ledsFront, NUM_LEDS_F, COL_BLUE);
 	fill_solid(ledsBack, NUM_LEDS_B, COL_PURPLE);
 
 	FastLED.show();
 
-	while (!Serial) ; 
-	Serial.print("MyAddress = ");
-	for (uint8_t i = 0; i < 4; ++i)
-		Serial.write(nodeAddr[myID][i]);
-	Serial.println(nodeAddr[myID][4]);
-
-	// delay(1000);
+	#ifdef DEBUG
+		Serial.print("MyAddress = ");
+		for (uint8_t i = 0; i < 4; ++i)
+			Serial.write(nodeAddr[i]);
+		Serial.println(nodeAddr[4]);
+	#endif
 
 }
 
 
 void loop() 
 {
-
-	if (CheckRF())
+	if (CheckRF()) 			// Check for new messages and update LEDs accordingly
 		LightLEDs();
 
-/*	// CheckRF();
 
-	// //Check if data is recieved over RF
-	// if ( myRadio.available()) 
-	// {
-	// 	//Extract data from RF Reciever
-	// 	while (myRadio.available())
-	// 		myRadio.read( &receivedData, sizeof(receivedData) );
-
-	// 	LightLEDs();
-	// }
-
-	if ( radio.available()) 
-	{
-		//Extract data from RF Reciever
-		// if (radio.available())
-		radio.read( &radioBuf_RX, RF_BUFF_LEN );
-
-		Serial.println("Got em!");
-
-		// LightLEDs();
-	}
-	
-	// if ( radio.available() ) 
-	// {
-	// 	radio.read( &dataReceived, sizeof(dataReceived) );
-	// }*/
-
-
-	// PrintRecDataArray();
-
-
-	// static uint32_t startTime = millis();
-
-	// if (startTime + 1000 < millis())
-	// {
-	// 	startTime = millis();
-	// 	Serial.println("Still running");
-	// }
+	// TODO - Indicate on LEDs if we haven't received a message for 10 seconds or so
+			// Alternate flash back LEDs
+			// Turn off front LEDs
 	
 }
 
@@ -163,42 +116,45 @@ void clearLEDs()
 	return;
 }
 
-// void LightLEDs()
-// {
-// 	if (receivedData[TALLY_NUM] == TALLY_PROG)
-// 	{
-// 		fill_solid(ledsFront, NUM_LEDS_F, COL_TAL_RF);
-// 		fill_solid(ledsBack, NUM_LEDS_B, COL_TAL_RB);
-// 	}
-// 	else if (receivedData[TALLY_NUM] == TALLY_PREV)
-// 	{
-// 		fill_solid(ledsFront, NUM_LEDS_F, COL_BLACK);
-// 		fill_solid(ledsBack, NUM_LEDS_B, COL_TAL_GB);
-// 	}
-// 	else if (receivedData[TALLY_NUM] == TALLY_AUDI)
-// 	{
-// 		fill_solid(ledsFront, NUM_LEDS_F, COL_BLACK);
-// 		fill_solid(ledsBack, NUM_LEDS_B, COL_YELLOW);
-// 	}
-// 	else
-// 		clearLEDs(); // all LEDs off
-
-// 	FastLED.show();
-// 	return;
-// }
-
 void LightLEDs()
 {
-	// Lights LEDs based off given values
-	// TODO - add local brightness override for back LEDs (based off light sensor)
-	fill_solid( ledsFront, NUM_LEDS_F, CRGB( radioBuf_RX[0], radioBuf_RX[1], radioBuf_RX[2]) );
-	fill_solid( ledsBack,  NUM_LEDS_B, CRGB( radioBuf_RX[3], radioBuf_RX[4], radioBuf_RX[5]) );
+
+	uint8_t tallyState = (radioBuf_RX[0] & 0b00000011);
+	bool frontTallyON  = (radioBuf_RX[0] & 0b00000100);
+	uint8_t tallyBrightness = radioBuf_RX[0] >> 4;
+
+	DPRINT(F("TallyState = "));
+	DPRINTLN(tallyState);
+
+	DPRINT(F("frontTallyON = "));
+	DPRINTLN(frontTallyON);
+
+	DPRINT(F("Brightness = "));
+	DPRINTLN(tallyBrightness);
+
+	// Light back LEDs
+	if (tallyState == PROGRAM)
+		fill_solid(ledsBack, NUM_LEDS_B, COL_TAL_RB);
+	else if (tallyState == PREVIEW)
+		fill_solid(ledsBack, NUM_LEDS_B, COL_TAL_GB);
+	else if (tallyState == AUDIOON)
+		fill_solid(ledsBack, NUM_LEDS_B, COL_YELLOW);
+	else
+		fill_solid(ledsBack, NUM_LEDS_B, COL_BLACK);
+
+
+	if (frontTallyON)
+	{
+		if (tallyState == PROGRAM)
+			fill_solid(ledsFront, NUM_LEDS_F, COL_TAL_RF);
+		else
+			fill_solid(ledsFront, NUM_LEDS_F, COL_BLACK);
+	}
+
 
 	FastLED.show();
 	return;
 }
-
-
 
 
 // void PrintRecDataArray()
@@ -227,32 +183,24 @@ bool CheckRF()
 	// Checks for updates from controller & updates state accordingly
 	bool newMessage = false;
 
-	if (radio.available())
+	if (radio.available())		// Read in message
 	{
-		// Read in message
 		radio.read(&radioBuf_RX, RF_BUFF_LEN);
-		// radio.writeAckPayload(1, &radioBuf_TX, RF_BUFF_LEN ); 	//Note: need to re-write ack payload after each use
 		newMessage = true;
-
-		// radioBuf_TX[0] += 1;
-
-		Serial.println("Got em!");
-
-		// while (radio.available())
-		// 	radio.read(radioBuf_RX, RF_BUFF_LEN); 				// flush ack responses
-
 	}
 
-	if (newMessage)
-	{
-		Serial.print("Message Received! = ");
-		for (uint8_t i = 0; i < RF_BUFF_LEN; ++i)
+	#ifdef DEBUG
+		if (newMessage)
 		{
-			Serial.print(radioBuf_RX[i], DEC);
-			Serial.print("\t");
+			Serial.print("Message Received! = ");
+			for (uint8_t i = 0; i < RF_BUFF_LEN; ++i)
+			{
+				Serial.print(radioBuf_RX[i], BIN);
+				Serial.print("\t");
+			}
+			Serial.println();
 		}
-		Serial.println();
-	}
+	#endif
 
 	return newMessage;
 }
