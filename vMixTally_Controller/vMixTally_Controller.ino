@@ -68,7 +68,7 @@ uint8_t myID = 0;						// master = 0
 // MAC address is printed on the shield
 // IP address is an available address you choose on your subnet where the switcher is also present:
 byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0xE8, 0xE9 };		// <= SETUP
-IPAddress ip(10, 10, 201, 107);        // ARDUINO IP ADDRESS
+IPAddress ip(10, 10, 201, 107);        												// ARDUINO IP ADDRESS
 
 
 // Include ATEM library and make an instance:
@@ -76,7 +76,7 @@ IPAddress ip(10, 10, 201, 107);        // ARDUINO IP ADDRESS
 
 // Connect to an ATEM switcher on this address and using this local port:
 // The port number is chosen randomly among high numbers.
-ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); // ATEM Switcher IP Address
+ATEM AtemSwitcher(IPAddress(10, 10, 201, 110), 56417); 				// ATEM Switcher IP Address
 
 
 //////////////////// MISC VARIABLES ////////////////////
