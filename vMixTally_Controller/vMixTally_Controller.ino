@@ -76,7 +76,7 @@ IPAddress ip(10, 10, 201, 107);        												// ARDUINO IP ADDRESS
 
 // Connect to an ATEM switcher on this address and using this local port:
 // The port number is chosen randomly among high numbers.
-ATEM AtemSwitcher(IPAddress(10, 10, 201, 110), 56417); 				// ATEM Switcher IP Address
+ATEM AtemSwitcher(IPAddress(10, 10, 201, 101), 56417); 				// ATEM Switcher IP Address
 
 
 //////////////////// MISC VARIABLES ////////////////////
