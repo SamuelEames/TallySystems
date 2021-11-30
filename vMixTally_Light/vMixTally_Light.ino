@@ -29,7 +29,7 @@ uint8_t nodeAddr[5];
 
 #define RF_BUFF_LEN 1						// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
 uint8_t radioBuf_RX[RF_BUFF_LEN];
-uint8_t myID = 2;								// controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
+uint8_t myID = 4;								// controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
 
 
 // Front LEDs - seen by people in front of camera
@@ -80,8 +80,9 @@ void setup()
 	FastLED.addLeds<WS2812B, LED_B_PIN, GRB>(ledsBack, NUM_LEDS_B);
 	FastLED.setBrightness(LED_BRIGHTNESS);
 
-	fill_solid(ledsFront, NUM_LEDS_F, COL_BLUE);
-	fill_solid(ledsBack, NUM_LEDS_B, COL_PURPLE);
+	fill_solid(ledsFront, NUM_LEDS_F, 0x000020);
+	ledsFront[myID-1] = COL_YELLOW;
+	fill_solid(ledsBack, NUM_LEDS_B, 0x200020);
 
 	FastLED.show();
 
