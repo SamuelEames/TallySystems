@@ -148,8 +148,9 @@ void setup()
 	radio.setChannel(108);					// Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
 	radio.setPALevel(RF24_PA_MAX);		// Let's make this powerful... later (RF24_PA_MAX)
 	radio.setDataRate(RF24_250KBPS);		// Let's make this quick
+	radio.enableDynamicPayloads();
 	// radio.stopListening();							// Probably don't need this line, but eh
-	radio.setAutoAck(false); 
+	// radio.setAutoAck(0, false); 
 	radio.openWritingPipe(RF_address);	// Broadcast to ALLL tallies
 	// radio.setRetries(0,5); 					// Smallest time between retries (delay, count)
 	// Note: writing pipe opened when we know who we want to talk to
@@ -228,7 +229,7 @@ void loop()
 void TX_Tallies()
 {
 	// Broadcasts tally data to tally lights
-	if (radio.write( &tallyState, RF_BUFF_LEN ))
+	if (radio.write( &tallyState, RF_BUFF_LEN, true ))
 		DPRINTLN(F("TX Success\n"));
 	else
 		DPRINTLN(F("TX FAIL\n"));
@@ -298,13 +299,6 @@ void LightLEDs_EXTTally()
 			leds[i-1] = COL_GREEN;
 		else
 			leds[i-1] = COL_BLACK;
-
-
-
-		// if (nodePresent[i]) 		// Low white glow for present nodes
-		// 	leds[i-1] += 0x101010; 
-		// else
-		// 	leds[i-1] %= 20; 			// Dim tally colours of absent nodes
 	}	
 
 	FastLED.show();
@@ -315,38 +309,38 @@ void LightLEDs_EXTTally()
 
 
 
-void getTXBuf(uint8_t ID)
-{
-	// Generates data to transmit to given tally number
-	/* TALLY BYTE DATA STRUCTURE
-			Bit 1-2 --> tally state 
-							0 = PROGRAM
-							1 = PREVIEW
-							2 = AUDIOON
-							4 = INPUTOFF
-			Bit 3   --> frontTallyON
-							0 = off
-							1 = on
-			Bit 4   --> spare
-			Bit 5-8 --> Tally Brightness (maybe front tally only & set back locally from light sensor?)
-	*/
+// void getTXBuf(uint8_t ID)
+// {
+// 	// Generates data to transmit to given tally number
+// 	/* TALLY BYTE DATA STRUCTURE
+// 			Bit 1-2 --> tally state 
+// 							0 = PROGRAM
+// 							1 = PREVIEW
+// 							2 = AUDIOON
+// 							4 = INPUTOFF
+// 			Bit 3   --> frontTallyON
+// 							0 = off
+// 							1 = on
+// 			Bit 4   --> spare
+// 			Bit 5-8 --> Tally Brightness (maybe front tally only & set back locally from light sensor?)
+// 	*/
 
-	uint8_t tempVal = 0;
+// 	uint8_t tempVal = 0;
 
-	// Fix this at some point later.. .but will need to fix light code to match
-	if (tallyState[ID] & 0x02) 			// Check program
-		tempVal = 0;
-	else if (tallyState[ID] & 0x01) // Check preview
-		tempVal = 1;
-	else
-		tempVal = 3;
+// 	// Fix this at some point later.. .but will need to fix light code to match
+// 	if (tallyState[ID] & 0x02) 			// Check program
+// 		tempVal = 0;
+// 	else if (tallyState[ID] & 0x01) // Check preview
+// 		tempVal = 1;
+// 	else
+// 		tempVal = 3;
 
-	radioBuf_TX[0] = tempVal;
-	radioBuf_TX[0] |= frontTallyON << 2; 			// flag for whether tally nodes should have front light on or not
-	radioBuf_TX[0] |= tallyBrightness << 4; 		// Brightness of tally lights (range 0-15)
+// 	radioBuf_TX[0] = tempVal;
+// 	radioBuf_TX[0] |= frontTallyON << 2; 			// flag for whether tally nodes should have front light on or not
+// 	radioBuf_TX[0] |= tallyBrightness << 4; 		// Brightness of tally lights (range 0-15)
 
-	return;
-}
+// 	return;
+// }
 
 
 #ifdef DEBUG

@@ -88,10 +88,21 @@ void setup()
   radio.begin();
   radio.setChannel(108);                // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
   radio.setPALevel(RF24_PA_MAX);        // Let's make this powerful... later (RF24_PA_MAX)
-  radio.setDataRate(RF24_250KBPS);      // Let's make this quick
-  radio.setAutoAck(false);              // Don't respond to messages
-  radio.openReadingPipe(0, RF_address); // My address to read messages in on
-  radio.startListening();               // Start listening now!
+  // radio.setDataRate(RF24_250KBPS);      // Let's make this quick
+  // radio.setAutoAck(true);
+  // radio.setAutoAck(0, false);              // Don't respond to messages
+  // radio.enableDynamicPayloads() ;
+  // radio.openReadingPipe(0, RF_address); // My address to read messages in on
+  // radio.startListening();               // Start listening now!
+
+
+  radio.setDataRate( RF24_250KBPS );
+  radio.openReadingPipe(0, RF_address);
+  radio.setAutoAck(false);
+  radio.enableDynamicPayloads() ;
+  radio.startListening();
+
+
 
   // Setup Pixel LEDs
   FastLED.addLeds<WS2812B, LED_F_PIN, GRB>(ledsFront, NUM_LEDS_F);
