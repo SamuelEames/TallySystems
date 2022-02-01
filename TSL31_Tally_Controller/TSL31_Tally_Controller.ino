@@ -43,7 +43,7 @@ CRGB leds[NUM_LEDS]; // Define the array of leds
 
 
 //////////////////// RF Variables ////////////////////
-#define MAX_TALLY_NODES 	9 							// Note: includes controller as a node (max nodes = 255)
+#define MAX_TALLY_NODES 	8 							// Note: includes controller as a node (max nodes = 255)
 
 RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 
@@ -81,7 +81,7 @@ bool newTallyData = false;
 uint8_t tallyState[TALLY_QTY];
 
 #define tallyBrightness 7 								// Brightness of tally lights on nodes (range 0-15)
-#define REFRESH_INTERVAL	3000 						// (ms) retransimits tally data to nodes when this time elapses from last transmit 
+#define REFRESH_INTERVAL	1000 						// (ms) retransimits tally data to nodes when this time elapses from last transmit 
 																						// Note: A transmit is executed every time a change in tally data is detected
 uint32_t lastTXTime = 0;									// Time of last transmit
 
@@ -158,7 +158,9 @@ void loop()
 	{
 		// UDP_InfoDump();
 		Udp.read(packetBuffer,UDP_TX_PACKET_MAX_SIZE); 		// read the packet into packetBufffer
-		// UDP_PacketDump();
+		#ifdef DEBUG
+	 		UDP_PacketDump();
+	 	#endif
 
 		unpackTSLTally();
 	}
@@ -197,9 +199,12 @@ void TX_Tallies(uint8_t ID)
 
 	if (ID == 0) // Update ALL tallies
 	{
-		DPRINTLN(F("TX TO ALL Tallies"));
+		DPRINTLN(F("TX TO ALL Tallies\n"));
 		for (uint8_t i = 1; i < MAX_TALLY_NODES; ++i)
 		{
+			// if ((i == 1) || (i == 5) || (i == 6))
+			// 	continue;
+			
 			radio.stopListening();
 			radio.openWritingPipe(nodeAddr[i]);
 			getTXBuf(i);
