@@ -1,5 +1,31 @@
+/* Tally Controller - reads TSL3.1 UDP Multicast data and broadcasts to tally lights via NRF24L01
+
+
+TODO
+ * Change NRF24L01 to do broadcast rather than unicast
+ 		* to improve speed of update
+ 		* Make infinitely epandable 
+ * Change to lower bitrate - to try and improve reliabality
+
+
+
+RADIO DATA FORMAT
+	* Let's transmit the first 16 cameras
+	* Each needs 
+		* PROG 									= 2x bytes 	(bit flags for cameras 0-15)
+		* ISO 									= 2x bytes
+		* PREV									= 2x bytes
+		* Brightness Front/back	= 1x byte 	(0-15 Front brightness, 0-15 Back brightness)
+
+	* = 7 bytes total to transmit each time
+
+*/
+
+
+
+
 // SETUP DEBUG MESSAGES
-// #define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
+#define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
 #ifdef DEBUG
 	#define DPRINT(...)		Serial.print(__VA_ARGS__)		//DPRINT is a macro, debug print
 	#define DPRINTLN(...)	Serial.println(__VA_ARGS__)	//DPRINTLN is a macro, debug print with new line
@@ -47,17 +73,18 @@ CRGB leds[NUM_LEDS]; // Define the array of leds
 
 RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 
-uint8_t addrStartCode[] = "TALY";					// First 4 bytes of node addresses (5th byte on each is node ID - set later)
-uint8_t nodeAddr[MAX_TALLY_NODES][5]; 	
-bool nodePresent[MAX_TALLY_NODES]; 				// Used to indicate whether a receiving node responded to a message or not
+uint8_t RF_address[] = "TALY0";
+// uint8_t addrStartCode[] = "TALY";					// First 4 bytes of node addresses (5th byte on each is node ID - set later)
+// uint8_t nodeAddr[MAX_TALLY_NODES][5]; 	
+// bool nodePresent[MAX_TALLY_NODES]; 				// Used to indicate whether a receiving node responded to a message or not
 
 
-#define RF_BUFF_LEN 1											// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
-uint8_t radioBuf_RX[RF_BUFF_LEN];
+#define RF_BUFF_LEN 7											// Number of bytes to transmit / receive -- Prog RGB, Prev RGB
+// uint8_t radioBuf_RX[RF_BUFF_LEN];
 uint8_t radioBuf_TX[RF_BUFF_LEN];
 bool newRFData = false;										// True if new data over radio just in
 
-uint8_t myID = 0;													// master = 0
+// uint8_t myID = 0;													// master = 0
 
 
 
@@ -74,11 +101,14 @@ uint8_t packetSize; 	 													// Holds size of last UDP message
 //////////////////// GLOBAL VARIABLES ////////////////////
 
 
-#define TALLY_QTY 17 		 									// Number of tally devices (counting up from 1);
+#define TALLY_QTY 16 		 									// Number of tally devices (counting up from 1);
 uint8_t TallyNum_lastRX;									// Holds number of last tally data received (counting up from 0)
 bool newTallyData = false;
 
-uint8_t tallyState[TALLY_QTY];
+// uint8_t tallyState[TALLY_QTY];
+
+uint16_t tallyState[4];
+
 
 #define tallyBrightness 7 								// Brightness of tally lights on nodes (range 0-15)
 #define REFRESH_INTERVAL	1000 						// (ms) retransimits tally data to nodes when this time elapses from last transmit 
@@ -105,20 +135,23 @@ void setup()
 	
 	// INITIALISE RADIO
 
-	// Generate node addresses
-	for (uint8_t i = 0; i < MAX_TALLY_NODES; ++i)
-	{
-		for (uint8_t j = 0; j < 4; ++j)	// Set first four bytes of address to same code
-			nodeAddr[i][j] = addrStartCode[j];
+	// // Generate node addresses
+	// for (uint8_t i = 0; i < MAX_TALLY_NODES; ++i)
+	// {
+	// 	for (uint8_t j = 0; j < 4; ++j)	// Set first four bytes of address to same code
+	// 		nodeAddr[i][j] = addrStartCode[j];
 
-		nodeAddr[i][4] = i;					// Unique 5th byte according to node address
-	}
+	// 	nodeAddr[i][4] = i;					// Unique 5th byte according to node address
+	// }
 
 	radio.begin();
 	radio.setChannel(108);					// Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
 	radio.setPALevel(RF24_PA_MAX);		// Let's make this powerful... later (RF24_PA_MAX)
-	radio.setDataRate(RF24_2MBPS);		// Let's make this quick
-	radio.setRetries(0,5); 					// Smallest time between retries (delay, count)
+	radio.setDataRate(RF24_250KBPS);		// Let's make this quick
+	// radio.stopListening();							// Probably don't need this line, but eh
+	radio.setAutoAck(false); 
+	radio.openWritingPipe(RF_address);	// Broadcast to ALLL tallies
+	// radio.setRetries(0,5); 					// Smallest time between retries (delay, count)
 	// Note: writing pipe opened when we know who we want to talk to
 
 
@@ -167,14 +200,14 @@ void loop()
 
 	if (newTallyData)
 	{
-		TX_Tallies(TallyNum_lastRX);					// Transmit data
+		TX_Tallies();					// Transmit data
 		newTallyData = false;									// Clear 'newData' flag
 	}
 
 
 	// UPDATE NODES AT LEAST EVERY SECOND
-	if (lastTXTime + REFRESH_INTERVAL < millis())
-		TX_Tallies(ALL);
+	// if (lastTXTime + REFRESH_INTERVAL < millis())
+	// 	TX_Tallies(ALL);
 
 	if (millis() < lastTXTime) 						// Millis() wrapped around - restart timer
 		lastTXTime = millis();
@@ -192,49 +225,62 @@ void loop()
 }
 
 
-
-void TX_Tallies(uint8_t ID)
+void TX_Tallies()
 {
-	// Transmits tally data to tallies that need it
-
-	if (ID == 0) // Update ALL tallies
-	{
-		DPRINTLN(F("TX TO ALL Tallies\n"));
-		for (uint8_t i = 1; i < MAX_TALLY_NODES; ++i)
-		{
-			// if ((i == 1) || (i == 5) || (i == 6))
-			// 	continue;
-			
-			radio.stopListening();
-			radio.openWritingPipe(nodeAddr[i]);
-			getTXBuf(i);
-
-			if (radio.write( &radioBuf_TX, RF_BUFF_LEN )) 
-				nodePresent[i] = true;
-			else 
-				nodePresent[i] = false;
-		}
-
-		lastTXTime = millis();
-
-	}
-	else   					// Only update given tally ID
-	{
-		DPRINT(F("TX TO TALLY #"));
-		DPRINTLN(ID, DEC);
-		radio.stopListening();
-		radio.openWritingPipe(nodeAddr[ID]);
-		getTXBuf(ID);
-
-		if (radio.write( &radioBuf_TX, RF_BUFF_LEN )) 
-			nodePresent[ID] = true;
-		else 
-			nodePresent[ID] = false;
-	}
+	// Broadcasts tally data to tally lights
+	if (radio.write( &tallyState, RF_BUFF_LEN ))
+		DPRINTLN(F("TX Success\n"));
+	else
+		DPRINTLN(F("TX FAIL\n"));
 
 
 	return;
 }
+
+
+
+// void TX_Tallies(uint8_t ID)
+// {
+// 	// Transmits tally data to tallies that need it
+
+// 	if (ID == 0) // Update ALL tallies
+// 	{
+// 		DPRINTLN(F("TX TO ALL Tallies\n"));
+// 		for (uint8_t i = 1; i < MAX_TALLY_NODES; ++i)
+// 		{
+// 			// if ((i == 1) || (i == 5) || (i == 6))
+// 			// 	continue;
+			
+// 			radio.stopListening();
+// 			radio.openWritingPipe(nodeAddr[i]);
+// 			getTXBuf(i);
+
+// 			if (radio.write( &radioBuf_TX, RF_BUFF_LEN )) 
+// 				nodePresent[i] = true;
+// 			else 
+// 				nodePresent[i] = false;
+// 		}
+
+// 		lastTXTime = millis();
+
+// 	}
+// 	else   					// Only update given tally ID
+// 	{
+// 		DPRINT(F("TX TO TALLY #"));
+// 		DPRINTLN(ID, DEC);
+// 		radio.stopListening();
+// 		radio.openWritingPipe(nodeAddr[ID]);
+// 		getTXBuf(ID);
+
+// 		if (radio.write( &radioBuf_TX, RF_BUFF_LEN )) 
+// 			nodePresent[ID] = true;
+// 		else 
+// 			nodePresent[ID] = false;
+// 	}
+
+
+// 	return;
+// }
 
 
 void LightLEDs_EXTTally()
@@ -243,19 +289,22 @@ void LightLEDs_EXTTally()
 
 	for (uint8_t i = 1; i < NUM_LEDS; ++i) 		// Tally ID 0 is master station -- skip this one
 	{
-		if (tallyState[i] & 0x02) // Check program
+
+		if (tallyState[1] & (1 << i)) // Check program
 			leds[i-1] = COL_RED;
-		else if (tallyState[i] & 0x01) // Check preview
+		else if (tallyState[2] & (1 << i)) // Check ISO
+			leds[i-1] = COL_YELLOW;
+		else if (tallyState[0] & (1 << i)) // Check preview
 			leds[i-1] = COL_GREEN;
 		else
 			leds[i-1] = COL_BLACK;
 
 
 
-		if (nodePresent[i]) 		// Low white glow for present nodes
-			leds[i-1] += 0x101010; 
-		else
-			leds[i-1] %= 20; 			// Dim tally colours of absent nodes
+		// if (nodePresent[i]) 		// Low white glow for present nodes
+		// 	leds[i-1] += 0x101010; 
+		// else
+		// 	leds[i-1] %= 20; 			// Dim tally colours of absent nodes
 	}	
 
 	FastLED.show();
@@ -285,7 +334,7 @@ void getTXBuf(uint8_t ID)
 	uint8_t tempVal = 0;
 
 	// Fix this at some point later.. .but will need to fix light code to match
-	if (tallyState[ID] & 0x02) // Check program
+	if (tallyState[ID] & 0x02) 			// Check program
 		tempVal = 0;
 	else if (tallyState[ID] & 0x01) // Check preview
 		tempVal = 1;
@@ -396,19 +445,38 @@ void unpackTSLTally()
 {
 	// Gets tally data from UDP packet and writes it into RAW tally array
 
+	// uint8_t dataTemp = 0;
+
 	if (packetSize == 18)															// Check it's the length we're expecting
 	{
 		// Get Tally Number
 		TallyNum_lastRX = packetBuffer[0] - 0x80; 				// Note starting input count from 0
+		// dataTemp = packetBuffer[1] & 0x03;							// Single out Prev & Program bits
+
 
 		if (TallyNum_lastRX < TALLY_QTY) 								// Only record data for tallies in our system
 		{
-			tallyState[TallyNum_lastRX] = packetBuffer[1];
+			//prev, prog, iso, brightness
+
+			uint16_t mask = 1 << TallyNum_lastRX;
+    	
+
+			tallyState[0] = ((tallyState[0] & ~mask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));
+			tallyState[1] = ((tallyState[1] & ~mask) | (((packetBuffer[1] >> 1) & 0x01) << TallyNum_lastRX));
+
+			// tallyState[TallyNum_lastRX] = packetBuffer[1];
 			Serial.print("Received Tally ");
-			Serial.println(TallyNum_lastRX+1);
+			Serial.println(TallyNum_lastRX);
+			Serial.println();
 
 			newTallyData = true;	
 		}
+	}
+
+	Serial.println("tallyState");
+	for (uint8_t i = 0; i < 4; ++i)
+	{
+		Serial.println(tallyState[i], BIN);
 	}
 
 	return;

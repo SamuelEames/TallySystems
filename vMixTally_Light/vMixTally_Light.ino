@@ -1,5 +1,21 @@
+/* Tally Light
+
+
+TODO 
+  * Add pixel output for optional tally light up number block on top of camera
+      * Or it could just use the same output and override the original one, like how headphone ports switch inhibit speakers when headphones are used
+      * Be careful not to short out PSU with whatever connection is used though.
+
+*/
+
+
+
+
+
+
+
 // SETUP DEBUG MESSAGES
-// #define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
+#define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
 #ifdef DEBUG
   #define DPRINT(...)   Serial.print(__VA_ARGS__)   //DPRINT is a macro, debug print
   #define DPRINTLN(...) Serial.println(__VA_ARGS__) //DPRINTLN is a macro, debug print with new line
@@ -24,10 +40,11 @@
 //////////////////// RF Variables ////////////////////
 RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 
-uint8_t addrStartCode[] = "TALY";   // First 4 bytes of node addresses (5th byte on each is node ID - set later)
-uint8_t nodeAddr[5];  
+uint8_t RF_address[] = "TALY0";
+// uint8_t addrStartCode[] = "TALY";   // First 4 bytes of node addresses (5th byte on each is node ID - set later)
+// uint8_t nodeAddr[5];  
 
-#define RF_BUFF_LEN 1           // Number of bytes to transmit / receive -- Prog RGB, Prev RGB
+#define RF_BUFF_LEN 7           // Number of bytes to transmit / receive -- Prog RGB, Prev RGB
 uint8_t radioBuf_RX[RF_BUFF_LEN];
 uint8_t myID = 3;               // controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
 
@@ -64,16 +81,17 @@ void setup()
   #endif
 
   // GET MY ID ... from BCD switch - TODO
-  memcpy(nodeAddr, addrStartCode, 4); // Generate my node address
-  nodeAddr[4] = myID; 
+  // memcpy(nodeAddr, addrStartCode, 4); // Generate my node address
+  // nodeAddr[4] = myID; 
 
   // Initialise Radio
   radio.begin();
-  radio.setChannel(108);          // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
-  radio.setPALevel(RF24_PA_HIGH);   // Let's make this powerful... later (RF24_PA_MAX)
-  radio.setDataRate(RF24_2MBPS);    // Let's make this quick
-  radio.openReadingPipe(1, nodeAddr); // My address to read messages in on
-  radio.startListening();         // Start listening now!
+  radio.setChannel(108);                // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
+  radio.setPALevel(RF24_PA_MAX);        // Let's make this powerful... later (RF24_PA_MAX)
+  radio.setDataRate(RF24_250KBPS);      // Let's make this quick
+  radio.setAutoAck(false);              // Don't respond to messages
+  radio.openReadingPipe(0, RF_address); // My address to read messages in on
+  radio.startListening();               // Start listening now!
 
   // Setup Pixel LEDs
   FastLED.addLeds<WS2812B, LED_F_PIN, GRB>(ledsFront, NUM_LEDS_F);
@@ -88,9 +106,10 @@ void setup()
 
   #ifdef DEBUG
     Serial.print("MyAddress = ");
-    for (uint8_t i = 0; i < 4; ++i)
-      Serial.write(nodeAddr[i]);
-    Serial.println(nodeAddr[4]);
+    Serial.println(myID);
+    // for (uint8_t i = 0; i < 4; ++i)
+    //   Serial.write(nodeAddr[i]);
+    // Serial.println(nodeAddr[4]);
   #endif
 
 }
