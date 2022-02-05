@@ -84,10 +84,10 @@ void setup()
   // memcpy(nodeAddr, addrStartCode, 4); // Generate my node address
   // nodeAddr[4] = myID; 
 
-  // Initialise Radio
+/*  // Initialise Radio
   radio.begin();
-  radio.setChannel(108);                // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
-  radio.setPALevel(RF24_PA_MAX);        // Let's make this powerful... later (RF24_PA_MAX)
+  // radio.setChannel(108);                // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
+  // radio.setPALevel(RF24_PA_MAX);        // Let's make this powerful... later (RF24_PA_MAX)
   // radio.setDataRate(RF24_250KBPS);      // Let's make this quick
   // radio.setAutoAck(true);
   // radio.setAutoAck(0, false);              // Don't respond to messages
@@ -98,9 +98,17 @@ void setup()
 
   radio.setDataRate( RF24_250KBPS );
   radio.openReadingPipe(0, RF_address);
-  radio.setAutoAck(false);
-  radio.enableDynamicPayloads() ;
-  radio.startListening();
+  // radio.setAutoAck(false);
+  // radio.enableDynamicPayloads() ;
+  radio.startListening();*/
+
+  radio.begin();
+  radio.setChannel(108);              // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
+  radio.setPALevel(RF24_PA_MAX);      // Let's make this powerful... later (RF24_PA_MAX)
+  radio.setDataRate( RF24_250KBPS );  // Use low bitrate to be more reliable.. I think??
+  radio.setAutoAck(false);            // Don't acknowledge messages
+  radio.openReadingPipe(0, RF_address); // All messages read on port 0
+  radio.startListening();             
 
 
 
@@ -213,8 +221,10 @@ bool CheckRF()
   // Checks for updates from controller & updates state accordingly
   bool newMessage = false;
 
+
   if (radio.available())    // Read in message
   {
+    Serial.print(".");
     radio.read(&radioBuf_RX, RF_BUFF_LEN);
     newMessage = true;
   }
