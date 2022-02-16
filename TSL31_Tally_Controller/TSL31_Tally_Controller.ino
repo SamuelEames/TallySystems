@@ -105,9 +105,7 @@ uint8_t packetSize;                             // Holds size of last UDP messag
 uint8_t TallyNum_lastRX;                  // Holds number of last tally data received (counting up from 0)
 bool newTallyData = false;
 
-// uint8_t tallyState[TALLY_QTY];
-
-uint16_t tallyState[4];
+uint16_t tallyState_ALL[4];                   // Holds current state of all tally lights
 
 
 #define tallyBrightness 7                 // Brightness of tally lights on nodes (range 0-15)
@@ -115,12 +113,7 @@ uint16_t tallyState[4];
                                             // Note: A transmit is executed every time a change in tally data is detected
 uint32_t lastTXTime = 0;                  // Time of last transmit
 
-bool frontTallyON = true;
-
-// uint8_t tallyState[TALLY_QTY];           // Holds current state of all tally lights
-// uint8_t tallyState_Last[TALLY_QTY];        // Last state of tally lights
-  
-#define ALL 0                             // Used when transmitting to 'ALL' tallies        
+bool frontTallyON = true;    
 
 
 
@@ -170,7 +163,7 @@ void setup()
   FastLED.show();
 
   for (uint8_t i = 0; i < TALLY_QTY; ++i) // clear tally light array
-    tallyState[i] = INPUTOFF;
+    tallyState_ALL[i] = INPUTOFF;
 
 
   // INITIALISE ETHERNET
@@ -184,7 +177,7 @@ void setup()
 
 
   for (uint8_t i = 0; i < TALLY_QTY; ++i)  // Initialise to 0
-    tallyState[i] = 0;
+    tallyState_ALL[i] = 0;
 
 }
 
@@ -214,8 +207,8 @@ void loop()
 
 
   // UPDATE NODES AT LEAST EVERY SECOND
-  // if (lastTXTime + REFRESH_INTERVAL < millis())
-  //  TX_Tallies(ALL);
+  if (lastTXTime + REFRESH_INTERVAL < millis())
+   TX_Tallies();
 
   if (millis() < lastTXTime)            // Millis() wrapped around - restart timer
     lastTXTime = millis();
@@ -236,10 +229,12 @@ void loop()
 void TX_Tallies()
 {
   // Broadcasts tally data to tally lights
-  if (radio.write( &radioBuf_TX, RF_BUFF_LEN, true ))
+  if (radio.write( &tallyState_ALL, RF_BUFF_LEN, true ))
     DPRINTLN(F("TX Success\n"));
   else
     DPRINTLN(F("TX FAIL\n"));
+
+  lastTXTime = millis();
 
 
   return;
@@ -298,11 +293,11 @@ void LightLEDs_EXTTally()
   for (uint8_t i = 1; i < NUM_LEDS; ++i)    // Tally ID 0 is master station -- skip this one
   {
 
-    if (tallyState[1] & (1 << i)) // Check program
+    if (tallyState_ALL[1] & (1 << i)) // Check program
       leds[i-1] = COL_RED;
-    else if (tallyState[2] & (1 << i)) // Check ISO
+    else if (tallyState_ALL[2] & (1 << i)) // Check ISO
       leds[i-1] = COL_YELLOW;
-    else if (tallyState[0] & (1 << i)) // Check preview
+    else if (tallyState_ALL[0] & (1 << i)) // Check preview
       leds[i-1] = COL_GREEN;
     else
       leds[i-1] = COL_BLACK;
@@ -335,9 +330,9 @@ void LightLEDs_EXTTally()
 //  uint8_t tempVal = 0;
 
 //  // Fix this at some point later.. .but will need to fix light code to match
-//  if (tallyState[ID] & 0x02)      // Check program
+//  if (tallyState_ALL[ID] & 0x02)      // Check program
 //    tempVal = 0;
-//  else if (tallyState[ID] & 0x01) // Check preview
+//  else if (tallyState_ALL[ID] & 0x01) // Check preview
 //    tempVal = 1;
 //  else
 //    tempVal = 3;
@@ -462,10 +457,10 @@ void unpackTSLTally()
       uint16_t mask = 1 << TallyNum_lastRX;
       
 
-      tallyState[0] = ((tallyState[0] & ~mask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));
-      tallyState[1] = ((tallyState[1] & ~mask) | (((packetBuffer[1] >> 1) & 0x01) << TallyNum_lastRX));
+      tallyState_ALL[0] = ((tallyState_ALL[0] & ~mask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));
+      tallyState_ALL[1] = ((tallyState_ALL[1] & ~mask) | (((packetBuffer[1] >> 1) & 0x01) << TallyNum_lastRX));
 
-      // tallyState[TallyNum_lastRX] = packetBuffer[1];
+      // tallyState_ALL[TallyNum_lastRX] = packetBuffer[1];
       Serial.print("Received Tally ");
       Serial.println(TallyNum_lastRX);
       Serial.println();
@@ -474,10 +469,10 @@ void unpackTSLTally()
     }
   }
 
-  Serial.println("tallyState");
+  Serial.println("tallyState_ALL");
   for (uint8_t i = 0; i < 4; ++i)
   {
-    Serial.println(tallyState[i], BIN);
+    Serial.println(tallyState_ALL[i], BIN);
   }
 
   return;
