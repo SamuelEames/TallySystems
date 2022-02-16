@@ -19,6 +19,14 @@ RADIO DATA FORMAT
 
   * = 7 bytes total to transmit each time
 
+
+  Switcher Tally Setup - notes just for me because I keep forgetting them
+   * 1-tslumd_1.0
+   * Multicast IP 224.0.168.168
+   * Port: 8903
+   * FSLBL ON
+   * ShowBusName Off
+
 */
 
 
@@ -230,9 +238,11 @@ void TX_Tallies()
 {
   // Broadcasts tally data to tally lights
   if (radio.write( &tallyState_ALL, RF_BUFF_LEN, true ))
-    DPRINTLN(F("TX Success\n"));
+    ;
+    // DPRINTLN(F("TX Success\n"));
   else
-    DPRINTLN(F("TX FAIL\n"));
+    ;
+    // DPRINTLN(F("TX FAIL\n"));
 
   lastTXTime = millis();
 
@@ -386,51 +396,51 @@ void LightLEDs_EXTTally()
     return;
   }
 
-  void UDP_TallyInfoDump()
-  {
-    // Prints tally info to console
+  // void UDP_TallyInfoDump()
+  // {
+  //   // Prints tally info to console
 
 
-    uint8_t TallyNum = 0;
-    bool TallyPrev = false;
-    bool TallyProg = false;
+  //   uint8_t TallyNum = 0;
+  //   bool TallyPrev = false;
+  //   bool TallyProg = false;
 
-    if (packetSize == 18)
-    {
-      // Get Tally Number
-      TallyNum = packetBuffer[0] - 0x80;
+  //   if (packetSize == 18)
+  //   {
+  //     // Get Tally Number
+  //     TallyNum = packetBuffer[0] - 0x80;
 
-      Serial.print("Tally Number ");
-      Serial.print(TallyNum, DEC);
+  //     Serial.print("Tally Number ");
+  //     Serial.print(TallyNum, DEC);
 
 
 
-      // Get Preview State
-      TallyPrev = packetBuffer[1] & 0x01;
+  //     // Get Preview State
+  //     TallyPrev = packetBuffer[1] & 0x01;
 
-      // Get Program State
-      TallyProg = (packetBuffer[1] >> 1) & 0x01;
+  //     // Get Program State
+  //     TallyProg = (packetBuffer[1] >> 1) & 0x01;
 
-      if (TallyPrev)
-        Serial.print(" PREVIEW");
+  //     if (TallyPrev)
+  //       Serial.print(" PREVIEW");
 
-      if (TallyProg)
-        Serial.print(" PROGRAM");
+  //     if (TallyProg)
+  //       Serial.print(" PROGRAM");
 
-      Serial.println();
+  //     Serial.println();
 
-      // Print name
-      Serial.print("DisplayData = ");
-      for (uint8_t i = 2; i < 18; ++i)
-        Serial.write(packetBuffer[i]);
+  //     // Print name
+  //     Serial.print("DisplayData = ");
+  //     for (uint8_t i = 2; i < 18; ++i)
+  //       Serial.write(packetBuffer[i]);
 
-      Serial.println();
+  //     Serial.println();
       
-    }
+  //   }
 
 
-    return;
-  }
+  //   return;
+  // }
 
 #endif
 
@@ -439,6 +449,7 @@ void LightLEDs_EXTTally()
 
 void unpackTSLTally()
 {
+  uint8_t ISO_InputNum = 0;
   // Gets tally data from UDP packet and writes it into RAW tally array
 
   // uint8_t dataTemp = 0;
@@ -465,7 +476,28 @@ void unpackTSLTally()
       Serial.println(TallyNum_lastRX);
       Serial.println();
 
+
       newTallyData = true;  
+    }
+    else if (TallyNum_lastRX == 0x77) // PGM ISO Bus
+    {
+      // Get input number that is going to that bus
+      ISO_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30);
+
+      Serial.print("Input Number is ");
+      Serial.print(packetBuffer[2]);
+      Serial.print("\t");
+      Serial.print(packetBuffer[3]);
+      Serial.print("\t");
+      Serial.println(packetBuffer[4]);
+      Serial.print("ISONUM = ");
+      Serial.println(ISO_InputNum);
+      // Serial.print("\t");
+      // Serial.print(packetBuffer[4]);
+      // Serial.print("\t");
+
+      tallyState_ALL[2] = 1 << ISO_InputNum;
+      newTallyData = true;
     }
   }
 
