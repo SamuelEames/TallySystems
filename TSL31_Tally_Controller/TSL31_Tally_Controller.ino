@@ -63,7 +63,7 @@ RADIO DATA FORMAT
 #include "FastLED.h"
 #include "RF24.h"
 
-#include "ENUMVars.h"
+// #include "ENUMVars.h"
 
 ///////////////////////// IO /////////////////////////
 #define LED_PIN     6
@@ -90,15 +90,15 @@ CRGB leds[NUM_LEDS]; // Define the array of leds
 
 
 //////////////////// RF Variables ////////////////////
-#define MAX_TALLY_NODES   8               // Note: includes controller as a node (max nodes = 255)
+// #define MAX_TALLY_NODES   8               // Note: includes controller as a node (max nodes = 255)
 
 RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 
 uint8_t RF_address[] = "TALY0";
 
-#define RF_BUFF_LEN 7                     // Number of bytes to transmit / receive -- Prog RGB, Prev RGB
+// #define RF_BUFF_LEN 6                     // Number of bytes to transmit / receive -- Prog RGB, Prev RGB
 // uint8_t radioBuf_RX[RF_BUFF_LEN];
-uint8_t radioBuf_TX[RF_BUFF_LEN];
+// uint8_t radioBuf_TX[RF_BUFF_LEN];
 bool newRFData = false;                   // True if new data over radio just in
 
 
@@ -112,23 +112,32 @@ uint16_t multicastport = 8903;                  // the Multicast Port to listen 
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE];      // buffer to hold incoming packet.
 uint8_t packetSize;                             // Holds size of last UDP message
 
+uint32_t lastEthTime;                           // Time ethernet data was last received
+#define TX_ETH_DELAY  20                        // (ms) delay between receving eth data and transmitting radio data 
+                                                //  to give ethernet more time for receiving
+
 //////////////////// GLOBAL VARIABLES ////////////////////
 
 
 #define TALLY_QTY 16                      // Number of tally devices (counting up from 1);
-uint8_t TallyNum_lastRX;                  // Holds number of last tally data received (counting up from 0)
 bool newTallyData = false;
 
-uint16_t tallyState_ALL[4];                   // Holds current state of all tally lights
+uint16_t tallyState_RAW[3];                   // Holds current state of all tally lights
+
+uint8_t tallyText_RAW[16][TALLY_QTY];   // Holds label names associated with each tally on range 1-32
 
 
 #define tallyBrightness 7                 // Brightness of tally lights on nodes (range 0-15)
-#define REFRESH_INTERVAL  200            // (ms) retransimits tally data to nodes when this time elapses from last transmit 
+#define REFRESH_INTERVAL  100            // (ms) retransimits tally data to nodes when this time elapses from last transmit 
                                             // Note: A transmit is executed every time a change in tally data is detected
 uint32_t lastTXTime = 0;                  // Time of last transmit
 
 bool frontTallyON = true;    
 
+bool ISO_enabled = true;
+uint8_t broadcastBus = 0x19;  // (25 - ME P/P BKGD) ID of broadcast output (for prog tallies - match to prev number)
+// uint8_t broadcastBus = 0x40;    // (64 - MiniMe 1 Bkgnd)
+uint8_t ISO_Bus = 0x77;       // (119) Aux MiniMe ID of alternate bus to show tallies on
 
 
 
@@ -155,8 +164,8 @@ void setup()
   radio.openWritingPipe(RF_address);  // All messages sent to same address
 
 
-  for (uint8_t i = 0; i < TALLY_QTY; ++i) // clear tally light array
-    tallyState_ALL[i] = INPUTOFF;
+  // for (uint8_t i = 0; i < TALLY_QTY; ++i) // clear tally light array
+  //   tallyState_RAW[i] = INPUTOFF;
 
 
   // INITIALISE ETHERNET
@@ -170,7 +179,7 @@ void setup()
 
 
   for (uint8_t i = 0; i < TALLY_QTY; ++i)  // Initialise to 0
-    tallyState_ALL[i] = 0;
+    tallyState_RAW[i] = 0;
 
 }
 
@@ -194,8 +203,11 @@ void loop()
 
   if (newTallyData)
   {
-    TX_Tallies();         // Transmit data
-    newTallyData = false;                 // Clear 'newData' flag
+    if (lastEthTime + TX_ETH_DELAY < millis())
+    {
+      TX_Tallies();         // Transmit data
+      newTallyData = false;                 // Clear 'newData' flag
+    }
   }
 
 
@@ -206,6 +218,9 @@ void loop()
   if (millis() < lastTXTime)            // Millis() wrapped around - restart timer
     lastTXTime = millis();
 
+  if (millis() < lastEthTime)
+    lastEthTime = millis();
+
   
   LightLEDs_EXTTally();     // light up local LEDs
 
@@ -215,8 +230,10 @@ void loop()
 void TX_Tallies()
 {
   // Broadcasts tally data to tally lights
-  radio.write( &tallyState_ALL, RF_BUFF_LEN, true );
+  radio.write( &tallyState_RAW, sizeof(tallyState_RAW), true );
   lastTXTime = millis();
+
+  // DPRINTLN("Radio TX");
 
   return;
 }
@@ -230,14 +247,14 @@ void LightLEDs_EXTTally()
   {
     leds[i-1] = COL_BLACK;
 
-    if (tallyState_ALL[1] & (1 << i))         // Check program
+    if (tallyState_RAW[1] & (1 << i))         // Check program
       leds[i-1] = COL_RED;
-    else if (tallyState_ALL[0] & (1 << i))    // Check preview
+    else if (tallyState_RAW[0] & (1 << i))    // Check preview
       leds[i-1] = COL_GREEN;
 
-    if (tallyState_ALL[2] & (1 << i))         // Check ISO (override preview)
+    if (tallyState_RAW[2] & (1 << i))         // Check ISO (override preview)
     {
-      if (tallyState_ALL[1] & (1 << i))       // Check for ISO & Prog state
+      if (tallyState_RAW[1] & (1 << i))       // Check for ISO & Prog state
         leds[i-1] = COL_ORANGE;
       else
         leds[i-1] = COL_YELLOW;               // ISO Only
@@ -295,11 +312,14 @@ void LightLEDs_EXTTally()
 #endif
 
 
+
 void unpackTSLTally()
 {
   // Gets tally data from UDP packet and writes it into RAW tally array
   uint8_t BUS_InputNum = 0;                         // Holds input number being sent to PGM I bus
-  uint16_t mask;
+  uint8_t TallyNum_lastRX;                          // Holds number of last tally data received (counting up from 0)
+
+  uint16_t bitMask;
 
 
   if (packetSize == 18)                             // Check it's the length we're expecting
@@ -309,16 +329,40 @@ void unpackTSLTally()
 
     if (TallyNum_lastRX < TALLY_QTY)                // Only record data for tallies in our system
     {
-      //prev, prog, iso, brightness
+      //[0] prev, [1] prog, [2] iso
 
-      mask = 1 << TallyNum_lastRX;
+      bitMask = 1 << TallyNum_lastRX; 
       
-      tallyState_ALL[0] = ((tallyState_ALL[0] & ~mask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));          // Preview
-      tallyState_ALL[1] = ((tallyState_ALL[1] & ~mask) | (((packetBuffer[1] >> 1) & 0x01) << TallyNum_lastRX));   // Program
+      tallyState_RAW[0] = ((tallyState_RAW[0] & ~bitMask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));          // Preview
+      // tallyState_RAW[1] = ((tallyState_RAW[1] & ~bitMask) | (((packetBuffer[1] >> 1) & 0x01) << TallyNum_lastRX));   // Program
 
-      newTallyData = true;  
+      // Save Label Text
+      // memcpy(tallyText_RAW[TallyNum_lastRX], packetBuffer[2], 16); // < This didn't work
+
+      for (uint8_t i = 0; i < 16; ++i)
+        tallyText_RAW[TallyNum_lastRX][i] = packetBuffer[2+i];
+
+      newTallyData = true;
     }
-    else if (TallyNum_lastRX == 0x77 /*|| TallyNum_lastRX == 0x19*/)  // PGM ISO Bus () OR 'ME1 BKGD' (25)
+
+
+    else if (TallyNum_lastRX == broadcastBus)
+    {
+      // Get input number that is going to that bus
+      BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30);
+
+      DPRINT("Broadcast Input = ");
+      DPRINTLN(BUS_InputNum);
+
+      if (BUS_InputNum < TALLY_QTY)
+      {
+        tallyState_RAW[1] = 1 << BUS_InputNum;
+        newTallyData = true;
+      } 
+    }
+
+
+    else if (ISO_enabled && TallyNum_lastRX == ISO_Bus)
     {
       // Get input number that is going to that bus
       BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30);
@@ -328,26 +372,14 @@ void unpackTSLTally()
 
       if (BUS_InputNum < TALLY_QTY)
       {
-        if (TallyNum_lastRX == 0x77) // ISO
-          tallyState_ALL[2] = 1 << BUS_InputNum;
-        // else // Program
-        // {
-        //   tallyState_ALL[1] = 1 << BUS_InputNum;
-        // }
+        tallyState_RAW[2] = 1 << BUS_InputNum;
+
         newTallyData = true;
       }
     }
-    // else if (TallyNum_lastRX == 0x19)               // ME 1 BKGD
-    // {
-    //   // Get input number that is going to that bus
-    //   BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30);
-
-    //   DPRINT("PGM I = ");
-    //   DPRINTLN(BUS_InputNum);
-    // }
+    lastEthTime = millis();
   }
 
   return;
 }
-
 

@@ -40,13 +40,13 @@ TODO
 //////////////////// RF Variables ////////////////////
 RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 
-uint8_t RF_address[] = "TALY0";
+uint8_t RF_address[] = "TALY1";
 
-#define RF_BUFF_LEN 7           // Number of bytes to transmit / receive -- Prog RGB, Prev RGB
-uint8_t radioBuf_RX[RF_BUFF_LEN];
-uint8_t myID = 1;               // controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
+// #define RF_BUFF_LEN 7           // Number of bytes to transmit / receive -- Prog RGB, Prev RGB
+// uint8_t radioBuf_RX[RF_BUFF_LEN];
+uint8_t myID = 3;               // controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
 
-uint16_t tallyState_ALL[4];
+uint16_t tallyState_RAW[3];
 
 
 // Front LEDs - seen by people in front of camera
@@ -160,30 +160,38 @@ void LightLEDs()
   fill_solid(ledsBack, NUM_LEDS_B, COL_BLACK);
 
 
-  if ( tallyState_ALL[0] & (1 << myID) ) // IF PREVIEW
+  if ( tallyState_RAW[0] & (1 << myID) ) // IF PREVIEW
     fill_solid(ledsBack, NUM_LEDS_B, COL_GREEN);
 
-  if ( tallyState_ALL[2] & (1 << myID) )  // IF ISO
+
+  if ( tallyState_RAW[1] & (1 << myID) )    // IF PROGRAM
   {
-    fill_solid(ledsFront, NUM_LEDS_F, COL_YELLOW);
-    fill_solid(ledsBack, NUM_LEDS_B, COL_YELLOW);
+    fill_solid(ledsFront, NUM_LEDS_F, COL_RED);
+    fill_solid(ledsBack, NUM_LEDS_B, COL_RED);
+
+    // if ( tallyState_RAW[2] & (1 << myID) )  // IF ISO AS WELL
+    // {
+    //   for (uint8_t i = 0; i < NUM_LEDS_B/2; ++i)
+    //     ledsBack[i] = COL_RED;
+    // }
+    // else // Just program
+    // {
+    //   fill_solid(ledsBack, NUM_LEDS_B, COL_RED);
+    // }
   }
 
-  if ( tallyState_ALL[1] & (1 << myID) )    // IF PROGRAM
+  if ( tallyState_RAW[2] & (1 << myID) )  // IF ISO
   {
-    if ( tallyState_ALL[2] & (1 << myID) )  // IF ISO AS WELL
+    // If also prev or program, only light half the back LEDs yellow
+    if ( (tallyState_RAW[0] & (1 << myID)) || (tallyState_RAW[1] & (1 << myID)) )
     {
-      for (uint8_t i = 0; i < NUM_LEDS_F/2; ++i)
-        ledsFront[i] = COL_RED;
       for (uint8_t i = 0; i < NUM_LEDS_B/2; ++i)
-        ledsBack[i] = COL_RED;
+        ledsBack[i] = COL_YELLOW;
     }
-    else // Just program
-    {
-      fill_solid(ledsFront, NUM_LEDS_F, COL_RED);
-      fill_solid(ledsBack, NUM_LEDS_B, COL_RED);
-    }
+    else
+      fill_solid(ledsBack, NUM_LEDS_B, COL_YELLOW);
   }
+
 
   FastLED.show();
   return;
@@ -199,7 +207,7 @@ bool CheckRF()
   if (radio.available())    // Read in message
   {
     DPRINT(".");
-    radio.read(&tallyState_ALL, RF_BUFF_LEN);
+    radio.read(&tallyState_RAW, sizeof(tallyState_RAW));
     newMessage = true;
   }
 
@@ -207,9 +215,9 @@ bool CheckRF()
     if (newMessage)
     {
       Serial.print("Message Received! = ");
-      for (uint8_t i = 0; i < sizeof(tallyState_ALL)/sizeof(tallyState_ALL[0]); ++i)
+      for (uint8_t i = 0; i < sizeof(tallyState_RAW)/sizeof(tallyState_RAW[0]); ++i)
       {
-        Serial.print(tallyState_ALL[i], BIN);
+        Serial.print(tallyState_RAW[i], BIN);
         Serial.print("\t");
       }
       Serial.println();

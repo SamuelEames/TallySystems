@@ -52,7 +52,7 @@ Display Data (16 bytes)
 
 
 // SETUP DEBUG MESSAGES
-#define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
+// #define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
 #ifdef DEBUG
   #define DPRINT(...)   Serial.print(__VA_ARGS__)   //DPRINT is a macro, debug print
   #define DPRINTLN(...) Serial.println(__VA_ARGS__) //DPRINTLN is a macro, debug print with new line
@@ -104,7 +104,7 @@ CRGB tallyLeds[NUM_TALLY_OUTPUTS][NUM_LEDS]; // Array of all LEDs
 #define COL_BLACK   0x000000
 
 
-uint8_t tallyOutputs[4] = {1, 2, 3, 4};     // Tallies to display on each output 
+uint8_t tallyOutputs[4] = {1,2,3,4};     // Tallies to display on each output 
 
 
 
@@ -112,7 +112,7 @@ uint8_t tallyOutputs[4] = {1, 2, 3, 4};     // Tallies to display on each output
 //////////////////// ETHERNET SETUP ////////////////////
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};    // MAC address of this Ethernet Shield.
 EthernetUDP Udp;
-IPAddress ip(10, 1, 100, 15);                   // static IP address that Arduino uses to connect to LAN.
+IPAddress ip(10, 1, 100, 199);                   // static IP address that Arduino uses to connect to LAN.
 // IPAddress ip(192, 168, 1, 15);
 IPAddress multicastip(224, 0, 168, 168);        // the Multicast IP to listen on.
 
@@ -133,7 +133,7 @@ uint8_t tallyText_RAW[16][TALLY_QTY];   // Holds label names associated with eac
 uint16_t tallyBrightness[NUM_TALLY_OUTPUTS]; // Holds brightnesses of front & back of each tally light
 
 
-#define REFRESH_INTERVAL  1300            // (ms) Longest time pixels aren't updated on connected lights
+#define REFRESH_INTERVAL  5000            // (ms) Longest time pixels aren't updated on connected lights
 
 bool frontTallyON = true;               // Sets whether front tally is used or not
 
@@ -142,6 +142,7 @@ uint32_t lastTXTime = 0;
 
 bool ISO_enabled = true;
 uint8_t broadcastBus = 0x19;  // ID of broadcast output (for prog tallies - match to prev number)
+// uint8_t broadcastBus = 0x40;    // (64 - MiniMe 1 Bkgnd)
 uint8_t ISO_Bus = 0x77;       // ID of alternate bus to show tallies on
 
 
@@ -164,11 +165,31 @@ void setup()
   #ifdef DEBUG
     Serial.begin(115200);
     while (!Serial) ; 
+
+    DPRINTLN("Hello!");
   #endif
 
 
   // INITIALISE ETHERNET
-  Ethernet.begin(mac, ip);
+  // Ethernet.begin(mac, ip);       // Static IP
+
+  if (Ethernet.begin(mac) == 0)     // Try DHCP
+  {
+    DPRINTLN(F("Failed to configure Ethernet using DHCP")); 
+
+    if (Ethernet.hardwareStatus() == EthernetNoHardware) 
+      DPRINTLN(F("Ethernet module not connected"));
+
+    else if (Ethernet.linkStatus() == LinkOFF)
+      DPRINT(F("Ethernet cable not connected"));
+  }
+  else
+  {
+    DPRINT(F("Successfully got DHCP IP: "));
+    DPRINTLN(Ethernet.localIP());
+  }
+
+
   Udp.beginMulticast(multicastip, multicastport);
 
   DPRINT(F("Starting to Listen for UDP Multicast Traffic on IP: "));
@@ -180,7 +201,7 @@ void setup()
   for (uint8_t i = 0; i < TALLY_QTY; ++i)  // Initialise tally data to 0
     tallyState_RAW[i] = 0x0000;
 
-  // for (uint8_t i = 0; i < sizeof(tallyText_RAW); ++i)         // Honestly not sure if this works
+  // for (uint8_t i = 0; i < sizeof(tallyText_RAW); ++i)         // Honestly not sure if this works.... it did not
   //   tallyText_RAW[i] = 0;
 
 }
@@ -210,7 +231,7 @@ void loop()
   }
 
 
-  // UPDATE NODES AT LEAST EVERY SECOND
+  // Retransmit tally pixel data if we haven't in a while
   if (lastTXTime + REFRESH_INTERVAL < millis())
    updateTallies();
 
@@ -221,20 +242,8 @@ void loop()
 
 void updateTallies()
 {
-  // Updates tallies
-
+  // Updates connected tally lights
   lastTXTime = millis();
-
-
-  // for (uint8_t i = 0; i < TALLY_QTY; ++i)
-  // {
-  //   for (uint8_t j = 0; j < 16; ++j)
-  //     Serial.write(tallyText_RAW[i][j]);
-  //   Serial.println();
-  // }
-
-
-  // Lights local LEDs to match external tally lights
 
   // Clear LED arrays
   fillLeds(COL_BLACK);
@@ -251,10 +260,10 @@ void updateTallies()
       else
         fill_solid(tallyLeds[i]+NUM_LEDS/2, NUM_LEDS/2, COL_RED);
     }
+
     // Check Preview
     else if (tallyState_RAW[0] & (1 << tallyOutputs[i]))
       fill_solid(tallyLeds[i]+NUM_LEDS/2, NUM_LEDS/2, COL_GREEN); // Only show prev on back
-
 
     // Check ISO
     if (ISO_enabled && tallyState_RAW[2] & (1 << tallyOutputs[i]))         // Check ISO (override preview)
@@ -264,34 +273,11 @@ void updateTallies()
       else
         fill_solid(tallyLeds[i]+NUM_LEDS/2, NUM_LEDS/2, COL_YELLOW);   // ISO Only
     }
-
-
-
-
-
-
-    // leds[i-1] = COL_BLACK;
-
-    // if (tallyState_RAW[1] & (1 << i))         // Check program
-    //   leds[i-1] = COL_RED;
-    // else if (tallyState_RAW[0] & (1 << i))    // Check preview
-    //   leds[i-1] = COL_GREEN;
-
-    // if (tallyState_RAW[2] & (1 << i))         // Check ISO (override preview)
-    // {
-    //   if (tallyState_RAW[1] & (1 << i))       // Check for ISO & Prog state
-    //     leds[i-1] = COL_ORANGE;
-    //   else
-    //     leds[i-1] = COL_YELLOW;               // ISO Only
-    // }
   } 
 
   FastLED.show();
 
   return;
-
-
-
 }
 
 void fillLeds(uint32_t colour)
@@ -302,8 +288,6 @@ void fillLeds(uint32_t colour)
 
    return;
 }
-
-
 
 
 #ifdef DEBUG
