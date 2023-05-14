@@ -156,7 +156,14 @@ uint8_t tallyText_RAW[16][TALLY_QTY];   // Holds label names associated with eac
                                             // Note: A transmit is executed every time a change in tally data is detected
 uint32_t lastTXTime = 0;                  // Time of last transmit
 
-bool frontTallyON = true;    
+bool frontTallyON = true;  
+
+bool getTalFromName = true;           // When true, tally data is extracted from looking at the names on inputs going to the selected 'Prev' and 'Prog' busses
+                                      // NOTE
+                                      //      * names must be of format "CAM X" where 'X' can be a number of 1-3 digits
+                                      //      * yellow tally light only works in this mode.
+                                      // When false, tally data is taken from input tally data flags (the more common way to get tallies).
+
 
 bool ISO_enabled = true;
 uint8_t broadcastBus = 0x19;  // (25 - ME P/P BKGD) ID of broadcast output (for prog tallies - match to prev number)
@@ -343,7 +350,6 @@ void unpackTSLTally()
   // Gets tally data from UDP packet and writes it into RAW tally array
   uint8_t BUS_InputNum = 0;                         // Holds input number being sent to PGM I bus
   uint8_t TallyNum_lastRX;                          // Holds number of last tally data received (counting up from 0)
-
   uint16_t bitMask;
 
 
@@ -352,73 +358,63 @@ void unpackTSLTally()
     // Get Tally Number
     TallyNum_lastRX = packetBuffer[0] - 0x80;       // Note starting input count from 0
 
-    if (TallyNum_lastRX < TALLY_QTY)                // Only record data for tallies in our system
+    if (getTalFromName)
     {
-      //[0] prev, [1] prog, [2] iso
-
-      bitMask = 1 << TallyNum_lastRX; 
-      
-      // Using actual tally data bits
-      // tallyState_RAW[0] = ((tallyState_RAW[0] & ~bitMask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));          // Preview
-      // tallyState_RAW[1] = ((tallyState_RAW[1] & ~bitMask) | (((packetBuffer[1] >> 1) & 0x01) << TallyNum_lastRX));   // Program
-
-      // Save Label Text
-      // memcpy(tallyText_RAW[TallyNum_lastRX], packetBuffer[2], 16); // < This didn't work
-
-      for (uint8_t i = 0; i < 16; ++i)
-        tallyText_RAW[TallyNum_lastRX][i] = packetBuffer[2+i];
-
-      newTallyData = true;
-    }
-    else if (TallyNum_lastRX == previewBus)
-    {
-      BUS_InputNum = getCamNumber(); // Converts plain text from output tally bus text data. Assumes format is "CAM X" (where X can be 1-3 digits)
-
-      DPRINT("Broadcast_Prev Input = ");      
-      DPRINTLN(BUS_InputNum);
+      BUS_InputNum = getCamNumber();                // Converts plain text from output tally bus text data. Assumes format is "CAM X" (where X can be 1-3 digits)
 
       if (BUS_InputNum < TALLY_QTY)
       {
-        tallyState_RAW[0] = 1 << BUS_InputNum;
-        newTallyData = true;
-      }       
+        //Note: tallyState_RAW rows --> [0] prev, [1] prog, [2] iso
+        if (TallyNum_lastRX == previewBus)
+        {
+          DPRINT("Broadcast_Prev Input = ");      
+          DPRINTLN(BUS_InputNum);
+
+          tallyState_RAW[0] = 1 << BUS_InputNum;
+          newTallyData = true;     
+        }
+
+        else if (TallyNum_lastRX == broadcastBus)
+        {
+          DPRINT("Broadcast_Prog Input = ");
+          DPRINTLN(BUS_InputNum);
+
+          tallyState_RAW[1] = 1 << BUS_InputNum;
+          newTallyData = true;
+        }
+
+        else if (ISO_enabled && TallyNum_lastRX == ISO_Bus)
+        {
+          DPRINT("PGM I = ");
+          DPRINTLN(BUS_InputNum);
+
+          tallyState_RAW[2] = 1 << BUS_InputNum;
+          newTallyData = true;
+        }
+      }
     }
-
-    else if (TallyNum_lastRX == broadcastBus)
+    else
     {
-      // Get input number that is going to that bus
-      // BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30); // Converts 3 digit tally from 'Show UMD ID' from ASCII text to integer
-      // BUS_InputNum = packetBuffer[6]-0x30; // Converts 5th digit of input name from Using plain text input name to integer -- assumes input name is of format "CAM X"
-
-      BUS_InputNum = getCamNumber(); // Converts plain text from output tally bus text data. Assumes format is "CAM X" (where X can be 1-3 digits)
-
-      DPRINT("Broadcast_Prog Input = ");
-      DPRINTLN(BUS_InputNum);
-
-      if (BUS_InputNum < TALLY_QTY)
+      if (TallyNum_lastRX < TALLY_QTY)                // Only record data for tallies in our system
       {
-        tallyState_RAW[1] = 1 << BUS_InputNum;
-        newTallyData = true;
-      } 
-    }
+        //Note: tallyState_RAW rows --> [0] prev, [1] prog, [2] iso
 
+        bitMask = 1 << TallyNum_lastRX; 
+        
+        // Using actual tally data bits
+        tallyState_RAW[0] = ((tallyState_RAW[0] & ~bitMask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));          // Preview
+        tallyState_RAW[1] = ((tallyState_RAW[1] & ~bitMask) | (((packetBuffer[1] >> 1) & 0x01) << TallyNum_lastRX));   // Program
 
-    else if (ISO_enabled && TallyNum_lastRX == ISO_Bus)
-    {
-      // Get input number that is going to that bus
-      // BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30); // Using 'Show UMD ID'
-      BUS_InputNum = getCamNumber();
+        // Save Label Text
+        // memcpy(tallyText_RAW[TallyNum_lastRX], packetBuffer[2], 16); // < This didn't work
 
-      DPRINT("PGM I = ");
-      DPRINTLN(BUS_InputNum);
-
-      if (BUS_InputNum < TALLY_QTY)
-      {
-        tallyState_RAW[2] = 1 << BUS_InputNum;
+        for (uint8_t i = 0; i < 16; ++i)
+          tallyText_RAW[TallyNum_lastRX][i] = packetBuffer[2+i];
 
         newTallyData = true;
       }
     }
+
     lastEthTime = millis();
   }
 
