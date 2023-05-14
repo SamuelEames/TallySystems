@@ -40,11 +40,11 @@ TODO
 //////////////////// RF Variables ////////////////////
 RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 
-uint8_t RF_address[] = "TALY1";
+uint8_t RF_address[] = "TALY0";
 
 // #define RF_BUFF_LEN 7           // Number of bytes to transmit / receive -- Prog RGB, Prev RGB
 // uint8_t radioBuf_RX[RF_BUFF_LEN];
-uint8_t myID = 3;               // controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
+uint8_t myID = 6;               // controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
 
 uint16_t tallyState_RAW[3];
 

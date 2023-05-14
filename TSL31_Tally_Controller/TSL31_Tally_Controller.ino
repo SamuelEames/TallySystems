@@ -39,6 +39,30 @@ RADIO DATA FORMAT
    * Port         8903    -- Important
 
 
+TSL TALLY DATA FORMAT (TSL 3.1)
+
+| HEADER | CONTROL BYTE | DISPLAY DATA |
+----------------------------------------------------------------
+  Header (1 Byte) = Display address (0-126) + 80 hex (control byte and display data will be sent )
+
+Control (1 byte)
+  bit 0 = tally 1 ( 1=on, 0=off )
+  bit 1 = tally 2 ( 1=on, 0=off )
+  bit 2 = tally 3 ( 1=on, 0=off )
+  bit 3 = tally 4 ( 1=on, 0=off )
+  
+  bits 4-5 = brightness data
+
+    bit 4 = 0, bit 5 = 0 (0 brightness)
+    bit 4 = 0, bit 5 = 1 (1/7 brightness)
+    bit 4 = 1, bit 5 = 0 (1/2 brightness)
+    bit 4 = 1, bit 5 = 1 (full brightness)
+    
+    bit 6 = reserved (clear to 0)
+    bit 7 = cleared to 0
+
+Display Data (16 bytes) = 16 displayable ASCII characters in the range 20 hex to 7E hex. All 16 characters must be sent.
+
 
 */
 
@@ -136,6 +160,7 @@ bool frontTallyON = true;
 
 bool ISO_enabled = true;
 uint8_t broadcastBus = 0x19;  // (25 - ME P/P BKGD) ID of broadcast output (for prog tallies - match to prev number)
+uint8_t previewBus   = 0x1A;
 // uint8_t broadcastBus = 0x40;    // (64 - MiniMe 1 Bkgnd)
 uint8_t ISO_Bus = 0x77;       // (119) Aux MiniMe ID of alternate bus to show tallies on
 
@@ -333,7 +358,8 @@ void unpackTSLTally()
 
       bitMask = 1 << TallyNum_lastRX; 
       
-      tallyState_RAW[0] = ((tallyState_RAW[0] & ~bitMask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));          // Preview
+      // Using actual tally data bits
+      // tallyState_RAW[0] = ((tallyState_RAW[0] & ~bitMask) | ((packetBuffer[1] & 0x01) << TallyNum_lastRX));          // Preview
       // tallyState_RAW[1] = ((tallyState_RAW[1] & ~bitMask) | (((packetBuffer[1] >> 1) & 0x01) << TallyNum_lastRX));   // Program
 
       // Save Label Text
@@ -344,14 +370,29 @@ void unpackTSLTally()
 
       newTallyData = true;
     }
+    else if (TallyNum_lastRX == previewBus)
+    {
+      BUS_InputNum = getCamNumber(); // Converts plain text from output tally bus text data. Assumes format is "CAM X" (where X can be 1-3 digits)
 
+      DPRINT("Broadcast_Prev Input = ");      
+      DPRINTLN(BUS_InputNum);
+
+      if (BUS_InputNum < TALLY_QTY)
+      {
+        tallyState_RAW[0] = 1 << BUS_InputNum;
+        newTallyData = true;
+      }       
+    }
 
     else if (TallyNum_lastRX == broadcastBus)
     {
       // Get input number that is going to that bus
-      BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30);
+      // BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30); // Converts 3 digit tally from 'Show UMD ID' from ASCII text to integer
+      // BUS_InputNum = packetBuffer[6]-0x30; // Converts 5th digit of input name from Using plain text input name to integer -- assumes input name is of format "CAM X"
 
-      DPRINT("Broadcast Input = ");
+      BUS_InputNum = getCamNumber(); // Converts plain text from output tally bus text data. Assumes format is "CAM X" (where X can be 1-3 digits)
+
+      DPRINT("Broadcast_Prog Input = ");
       DPRINTLN(BUS_InputNum);
 
       if (BUS_InputNum < TALLY_QTY)
@@ -365,7 +406,8 @@ void unpackTSLTally()
     else if (ISO_enabled && TallyNum_lastRX == ISO_Bus)
     {
       // Get input number that is going to that bus
-      BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30);
+      // BUS_InputNum = (packetBuffer[2]-0x30) * 100 + (packetBuffer[3]-0x30) * 10 + (packetBuffer[4]-0x30); // Using 'Show UMD ID'
+      BUS_InputNum = getCamNumber();
 
       DPRINT("PGM I = ");
       DPRINTLN(BUS_InputNum);
@@ -381,5 +423,37 @@ void unpackTSLTally()
   }
 
   return;
+}
+
+
+
+uint8_t getCamNumber()
+{
+  // Converts cam number plain text from cam buffer to int
+  // Works up to three digits
+  // Returns 0 if input was formatted wrong
+
+  uint8_t camNumber = 0;
+
+  // Confirm format is "CAM X" for name
+  if (packetBuffer[2] == 'C' && packetBuffer[3] == 'A' && packetBuffer[4] == 'M' && packetBuffer[5] == ' ')
+  {
+    if (packetBuffer[7] <= '9' && packetBuffer[7] >= '0')
+    {
+      if (packetBuffer[8] <= '9' && packetBuffer[8] >= '0') // 3 digit cam number
+        camNumber = (packetBuffer[6]-0x30) * 100 + (packetBuffer[7]-0x30) * 10 + (packetBuffer[8]-0x30);
+      else                                                // 2 Digit cam number
+        camNumber = (packetBuffer[6]-0x30) * 10 + (packetBuffer[7]-0x30);
+    }
+    else                                                  // single digit cam number
+      camNumber = packetBuffer[6]-0x30; // Using plain text input name
+  }
+  else
+  {
+    DPRINTLN(F("invalid cam input text format"));
+  }
+
+
+  return camNumber;
 }
 
