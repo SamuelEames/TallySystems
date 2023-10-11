@@ -361,6 +361,7 @@ void unpackTSLTally()
     if (getTalFromName)
     {
       BUS_InputNum = getCamNumber();                // Converts plain text from output tally bus text data. Assumes format is "CAM X" (where X can be 1-3 digits)
+      
 
       if (BUS_InputNum < TALLY_QTY)
       {
