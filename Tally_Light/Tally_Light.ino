@@ -1,5 +1,16 @@
 /* Tally Light
 
+11/10/2023 - started major updates!
+  * TODO
+    * Hex switch to select tally number
+    * Light sensor to set brightness automatically
+    * Button to set channel
+      * Hold button while powering on, then use hex switch to select channel.
+      * Channel is saved to EEPROM 10s after no changes
+      * Either power cycle to get out of settings mode, OR automatically restart after the 10s
+
+  * Changed MCU to save costs on units - using Atmega328 instead of Atmega32u4
+
 
 TODO 
   * Add pixel output for optional tally light up number block on top of camera
@@ -15,7 +26,7 @@ TODO
 
 
 // SETUP DEBUG MESSAGES
-// #define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
+#define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
 #ifdef DEBUG
   #define DPRINT(...)   Serial.print(__VA_ARGS__)   //DPRINT is a macro, debug print
   #define DPRINTLN(...) Serial.println(__VA_ARGS__) //DPRINTLN is a macro, debug print with new line
@@ -28,13 +39,42 @@ TODO
 #include "FastLED.h"
 #include "RF24.h"
 #include "ENUMVars.h"
+#include "Adafruit_VEML7700.h"
 
 
 ///////////////////////// IO /////////////////////////
-#define RF_CSN_PIN    18
-#define RF_CE_PIN     19
-#define LED_F_PIN     20
-#define LED_B_PIN     21
+
+// ///////////////////////// Atmega32u4 
+// #define RF_CSN_PIN    18
+// #define RF_CE_PIN     19
+
+// #define LED_F_PIN     20
+// #define LED_B_PIN     21
+
+
+///////////////////////// Atmega328 
+// Radio
+#define RF_CE_PIN     9     // 13 - PB1
+#define RF_CSN_PIN    10    // 14 - PB2
+// SCK  - 17 PB5
+// MOSI - 15 PB3
+// MISO - 16 PB4
+
+// Pixels
+#define LED_F_PIN     7
+#define LED_B_PIN     8
+
+// BCD Switch
+#define BCD_1         14    // 26 - PC0
+#define BCD_2         15    // 25 - PC1
+#define BCD_4         16    // 24 - PC2
+#define BCD_8         17    // 23 - PC3
+
+// Light Sensor??
+// SCL -- 19 - 28 PC5
+// SDA -- 18 - 27 PC4
+
+
 
 
 //////////////////// RF Variables ////////////////////
@@ -44,7 +84,9 @@ uint8_t RF_address[] = "TALY0";
 
 // #define RF_BUFF_LEN 7           // Number of bytes to transmit / receive -- Prog RGB, Prev RGB
 // uint8_t radioBuf_RX[RF_BUFF_LEN];
-uint8_t myID = 3;               // controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
+// uint8_t MY_TALLY_ID = 3;               // controller/transmitter = 0 - TODO update this to get value from BCD switch - MY TALLY NUMBER (1 = cam 1, etc)
+#define MY_TALLY_ID ~PINC & 0x0F    // Returns current tally number according to BCD switch
+
 
 uint16_t tallyState_RAW[3];
 
@@ -72,6 +114,9 @@ CRGB ledsBack[NUM_LEDS_B];
 #define COL_TAL_RB  0x3F0000
 #define COL_TAL_GB  0x003F00
 
+// Initialise Light Sensor
+Adafruit_VEML7700 luxSensor = Adafruit_VEML7700();
+
 
 void setup() 
 {
@@ -80,27 +125,17 @@ void setup()
     while (!Serial) ; 
   #endif
 
-  // GET MY ID ... from BCD switch - TODO
-  // memcpy(nodeAddr, addrStartCode, 4); // Generate my node address
-  // nodeAddr[4] = myID; 
-
-/*  // Initialise Radio
-  radio.begin();
-  // radio.setChannel(108);                // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
-  // radio.setPALevel(RF24_PA_MAX);        // Let's make this powerful... later (RF24_PA_MAX)
-  // radio.setDataRate(RF24_250KBPS);      // Let's make this quick
-  // radio.setAutoAck(true);
-  // radio.setAutoAck(0, false);              // Don't respond to messages
-  // radio.enableDynamicPayloads() ;
-  // radio.openReadingPipe(0, RF_address); // My address to read messages in on
-  // radio.startListening();               // Start listening now!
+  pinMode(BCD_1, INPUT_PULLUP);
+  pinMode(BCD_2, INPUT_PULLUP);
+  pinMode(BCD_4, INPUT_PULLUP);
+  pinMode(BCD_8, INPUT_PULLUP);
 
 
-  radio.setDataRate( RF24_250KBPS );
-  radio.openReadingPipe(0, RF_address);
-  // radio.setAutoAck(false);
-  // radio.enableDynamicPayloads() ;
-  radio.startListening();*/
+  if (!luxSensor.begin()) 
+  {
+    DPRINTLN("Light sensor not found");
+  }    
+
 
   radio.begin();
   radio.setChannel(108);              // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
@@ -124,7 +159,7 @@ void setup()
 
   #ifdef DEBUG
     Serial.print("MyAddress = ");
-    Serial.println(myID);
+    Serial.println(MY_TALLY_ID);
   #endif
 
 }
@@ -132,8 +167,17 @@ void setup()
 
 void loop() 
 {
+  static uint8_t myTallyID_last = MY_TALLY_ID;
+
   if (CheckRF())      // Check for new messages and update LEDs accordingly
     LightLEDs();
+
+  // Update LEDs instantly if MY_TALLY_ID has changed
+  if (MY_TALLY_ID != myTallyID_last)
+  {
+    LightLEDs();
+    myTallyID_last = MY_TALLY_ID;
+  }
 
 
   // TODO - Indicate on LEDs if we haven't received a message for 10 seconds or so
@@ -160,30 +204,20 @@ void LightLEDs()
   fill_solid(ledsBack, NUM_LEDS_B, COL_BLACK);
 
 
-  if ( tallyState_RAW[0] & (1 << myID) ) // IF PREVIEW
+  if ( tallyState_RAW[0] & (1 << MY_TALLY_ID) ) // IF PREVIEW
     fill_solid(ledsBack, NUM_LEDS_B, COL_GREEN);
 
 
-  if ( tallyState_RAW[1] & (1 << myID) )    // IF PROGRAM
+  if ( tallyState_RAW[1] & (1 << MY_TALLY_ID) )    // IF PROGRAM
   {
     fill_solid(ledsFront, NUM_LEDS_F, COL_RED);
     fill_solid(ledsBack, NUM_LEDS_B, COL_RED);
-
-    // if ( tallyState_RAW[2] & (1 << myID) )  // IF ISO AS WELL
-    // {
-    //   for (uint8_t i = 0; i < NUM_LEDS_B/2; ++i)
-    //     ledsBack[i] = COL_RED;
-    // }
-    // else // Just program
-    // {
-    //   fill_solid(ledsBack, NUM_LEDS_B, COL_RED);
-    // }
   }
 
-  if ( tallyState_RAW[2] & (1 << myID) )  // IF ISO
+  if ( tallyState_RAW[2] & (1 << MY_TALLY_ID) )  // IF ISO
   {
     // If also prev or program, only light half the back LEDs yellow
-    if ( (tallyState_RAW[0] & (1 << myID)) || (tallyState_RAW[1] & (1 << myID)) )
+    if ( (tallyState_RAW[0] & (1 << MY_TALLY_ID)) || (tallyState_RAW[1] & (1 << MY_TALLY_ID)) )
     {
       for (uint8_t i = 0; i < NUM_LEDS_B/2; ++i)
         ledsBack[i] = COL_YELLOW;
