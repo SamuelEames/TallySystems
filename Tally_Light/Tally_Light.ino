@@ -71,6 +71,8 @@ TODO
 #define BCD_4         16    // 24 - PC2
 #define BCD_8         17    // 23 - PC3
 
+#define BTN_PIN       6
+
 // Light Sensor??
 // SCL -- 19 - 28 PC5
 // SDA -- 18 - 27 PC4
@@ -127,6 +129,8 @@ void setup()
   pinMode(BCD_4, INPUT_PULLUP);
   pinMode(BCD_8, INPUT_PULLUP);
 
+  pinMode(BTN_PIN, INPUT_PULLUP);
+
 
   if (!veml.begin()) 
   {
@@ -149,13 +153,26 @@ void setup()
   FastLED.setBrightness(MIN_LED_BRIGHTNESS);
 
   fill_solid(leds, NUM_LEDS, 0x000020);
-
   FastLED.show();
+
 
   #ifdef DEBUG
     Serial.print("MyAddress = ");
     Serial.println(MY_TALLY_ID);
   #endif
+
+
+  if (!digitalRead(BTN_PIN))
+  {
+    DPRINTLN("SETUP MODE");
+    fill_solid(leds, NUM_LEDS, COL_WHITE);
+    FastLED.show();
+
+    while(1) // Stay in setup mode until power cycle (TODO - jump out of it if no changes made in a while)
+    {
+
+    }
+  }
 
 }
 
