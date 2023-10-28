@@ -210,7 +210,7 @@ void setup()
   DPRINTLN(multicastport);
 
 
-  for (uint8_t i = 0; i < TALLY_QTY; ++i)  // Initialise to 0
+  for (uint8_t i = 0; i < sizeof(tallyState_RAW) * sizeof(tallyState_RAW[0]); ++i)  // Initialise to 0
     tallyState_RAW[i] = 0;
 
 }
