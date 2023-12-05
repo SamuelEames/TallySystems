@@ -1,4 +1,4 @@
-21983866797718209
+22006063181768077
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -63398,6 +63398,62 @@ Mounting 4.5mm 9774100982
 0
 8
 1
+MySensors
+NRF24L01
+NRF24L01
+nRF 24 NRF24L01 NRF24L01+
+0
+8
+8
+MySensors
+NRF24L01-SMD
+
+
+0
+8
+8
+MySensors
+NRF24L01_PA_LNA-SMD
+
+
+0
+8
+8
+MySensors
+RFM69HW_SMD
+RFM69HW
+RFM69HW, RF69
+0
+16
+16
+MySensors
+RFM69HW_SMD_Handsoldering
+RFM69HW
+RFM69HW, RF69
+0
+16
+16
+MySensors
+RFM69HW_SMD_ThroughHole
+RFM69HW
+RFM69HW, RF69
+0
+32
+16
+MySensors
+RFM69HW_SMD_ThroughHole_Handsoldering
+RFM69HW
+RFM69HW, RF69
+0
+32
+16
+MySensors
+RFM69HW_ThroughHole
+RFM69HW
+RFM69HW, RF69
+0
+16
+16
 NetTie
 NetTie-2_SMD_Pad0.5mm
 Net tie, 2 pin, 0.5mm square SMD pads
@@ -83160,6 +83216,13 @@ Transformer
 7
 7
 SamacSys_Parts
+ABLS
+ABLS
+Crystal or Oscillator
+0
+2
+2
+SamacSys_Parts
 BB26APHC
 BB26AP-HC-2
 Switch
@@ -84077,6 +84140,13 @@ Integrated Circuit
 20
 20
 SamacSys_Parts
+SOT65P210X110-6N
+SOT-363 2
+Transistor
+0
+6
+6
+SamacSys_Parts
 SOT95P230X110-3N
 SOT23-ren3
 Transistor BJT NPN
@@ -84133,6 +84203,13 @@ Schottky Diode
 3
 3
 SamacSys_Parts
+TS026650BK260SCRD
+TS02-66-50-BK-260-SCR-D-3
+Switch
+0
+4
+4
+SamacSys_Parts
 TS026660BK100LCRD
 TS02-66-60-BK-100-LCR-D-2
 Integrated Circuit
@@ -84182,6 +84259,13 @@ LED
 4
 4
 SamacSys_Parts
+YC124JR0710KL
+YC124-JR-0710KL-5
+Resistor Network
+0
+8
+8
+SamacSys_Parts
 timMugBMP
 
 
@@ -84189,12 +84273,19 @@ timMugBMP
 0
 0
 Samuel_Library
+R_0805_2012Metric_Pad1.20x1.40mm_HandSolder
+Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator
+resistor handsolder
+0
+2
+2
+Samuel_Library
 SK6812_SIDE-A
 
 
 0
-0
-0
+6
+4
 Sensor
 Aosong_DHT11_5.5x12.0_P2.54mm
 Temperature and humidity module, http://akizukidenshi.com/download/ds/aosong/DHT11.pdf

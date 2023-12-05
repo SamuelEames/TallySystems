@@ -1,0 +1,1678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="E">
+  <design>
+    <source>C:\Users\samue\OneDrive\Documents\ELECTRONICS_PROJECTS\TallySystems\KiCad\TallyLight\TallyLight.kicad_sch</source>
+    <date>9/11/2023 0:10:53</date>
+    <tool>Eeschema 7.0.5</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>TallyLight.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="3V1">
+      <value>LED</value>
+      <footprint>LED_SMD:LED_0805_2012Metric</footprint>
+      <libsource lib="Device" part="LED" description="Light emitting diode"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Light emitting diode"/>
+      <property name="ki_keywords" value="LED diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c675e87c-5ce0-42c7-a5ed-51b85957af25</tstamps>
+    </comp>
+    <comp ref="5V1">
+      <value>LED</value>
+      <footprint>LED_SMD:LED_0805_2012Metric</footprint>
+      <libsource lib="Device" part="LED" description="Light emitting diode"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Light emitting diode"/>
+      <property name="ki_keywords" value="LED diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b7e5efde-7b35-489c-8405-f84cb8fcf351</tstamps>
+    </comp>
+    <comp ref="C1">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>356d499f-d945-4635-bf50-40fd83e24def</tstamps>
+    </comp>
+    <comp ref="C2">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>bcfb1f10-e61f-41bf-a3af-f1919ed85039</tstamps>
+    </comp>
+    <comp ref="C3">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>7bdeed2f-e58e-4dbb-8233-a4003f5fa3a3</tstamps>
+    </comp>
+    <comp ref="C4">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>57357da1-8f1d-4abf-b7c7-5215ec98b1fa</tstamps>
+    </comp>
+    <comp ref="C5">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f771b697-8316-4f8c-b195-ceaf33d3bebc</tstamps>
+    </comp>
+    <comp ref="C6">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>19ac2ff6-f353-42ed-82d1-2c24cdf64fe7</tstamps>
+    </comp>
+    <comp ref="C7">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>923823af-165e-43b0-9cf6-e60c5960b10c</tstamps>
+    </comp>
+    <comp ref="C8">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>a9dd8ad4-ff59-403e-9056-935102d1bf92</tstamps>
+    </comp>
+    <comp ref="C9">
+      <value>105</value>
+      <footprint>SamacSys_Parts:CAPC2012X135N</footprint>
+      <datasheet>https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-DGA8/2478774.pdf</datasheet>
+      <fields>
+        <field name="Description">Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R</field>
+        <field name="Height">1.35</field>
+        <field name="Manufacturer_Name">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer_Part_Number">CL21B105KBFNNNG</field>
+        <field name="Mouser Part Number">187-CL21B105KBFNNNG</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Samsung-Electro-Mechanics/CL21B105KBFNNNG?qs=hqM3L16%252Bxlf%252BLSavaAk0sA%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="CL21B105KBFNNNG" description="Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R"/>
+      <property name="Description" value="Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R"/>
+      <property name="Height" value="1.35"/>
+      <property name="Mouser Part Number" value="187-CL21B105KBFNNNG"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Samsung-Electro-Mechanics/CL21B105KBFNNNG?qs=hqM3L16%252Bxlf%252BLSavaAk0sA%3D%3D"/>
+      <property name="Manufacturer_Name" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer_Part_Number" value="CL21B105KBFNNNG"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>81e3f683-3ecc-4b8e-970f-07bc27c31e51</tstamps>
+    </comp>
+    <comp ref="C10">
+      <value>471</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 470 pF, 10%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C471K5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C471K5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C471K5RACTU?qs=zLJ08xwufm6Yml9V9rLpFw%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C471K5RACTU" description="SMD Comm X7R, Ceramic, 470 pF, 10%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 470 pF, 10%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C471K5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C471K5RACTU?qs=zLJ08xwufm6Yml9V9rLpFw%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C471K5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 470 pF, 10%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>dd9d274b-8e0b-424f-a7b7-d17dd5f9ed1c</tstamps>
+    </comp>
+    <comp ref="C11">
+      <value>105</value>
+      <footprint>SamacSys_Parts:CAPC2012X135N</footprint>
+      <datasheet>https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-DGA8/2478774.pdf</datasheet>
+      <fields>
+        <field name="Description">Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R</field>
+        <field name="Height">1.35</field>
+        <field name="Manufacturer_Name">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer_Part_Number">CL21B105KBFNNNG</field>
+        <field name="Mouser Part Number">187-CL21B105KBFNNNG</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Samsung-Electro-Mechanics/CL21B105KBFNNNG?qs=hqM3L16%252Bxlf%252BLSavaAk0sA%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="CL21B105KBFNNNG" description="Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R"/>
+      <property name="Description" value="Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R"/>
+      <property name="Height" value="1.35"/>
+      <property name="Mouser Part Number" value="187-CL21B105KBFNNNG"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Samsung-Electro-Mechanics/CL21B105KBFNNNG?qs=hqM3L16%252Bxlf%252BLSavaAk0sA%3D%3D"/>
+      <property name="Manufacturer_Name" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer_Part_Number" value="CL21B105KBFNNNG"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8645471b-d859-4c40-ad29-78ccf21469dd</tstamps>
+    </comp>
+    <comp ref="C12">
+      <value>106</value>
+      <footprint>SamacSys_Parts:CAPC1608X90N</footprint>
+      <datasheet>https://psearch.en.murata.com/capacitor/product/GRM188D71A106MA73%23.html</datasheet>
+      <fields>
+        <field name="Description">Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm</field>
+        <field name="Height">0.9</field>
+        <field name="Manufacturer_Name">Murata Electronics</field>
+        <field name="Manufacturer_Part_Number">GRM188D71A106MA73J</field>
+        <field name="Mouser Part Number">81-GRM188D71A106MA3J</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Murata-Electronics/GRM188D71A106MA73J?qs=hNud%2FORuBR3g0t9KhbQaoQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="GRM188D71A106MA73J" description="Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm"/>
+      <property name="Description" value="Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm"/>
+      <property name="Height" value="0.9"/>
+      <property name="Mouser Part Number" value="81-GRM188D71A106MA3J"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Murata-Electronics/GRM188D71A106MA73J?qs=hNud%2FORuBR3g0t9KhbQaoQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="Murata Electronics"/>
+      <property name="Manufacturer_Part_Number" value="GRM188D71A106MA73J"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3cd98ab6-8e51-449b-a2c4-6477f1d8ac48</tstamps>
+    </comp>
+    <comp ref="C13">
+      <value>106</value>
+      <footprint>SamacSys_Parts:CAPC1608X90N</footprint>
+      <datasheet>https://psearch.en.murata.com/capacitor/product/GRM188D71A106MA73%23.html</datasheet>
+      <fields>
+        <field name="Description">Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm</field>
+        <field name="Height">0.9</field>
+        <field name="Manufacturer_Name">Murata Electronics</field>
+        <field name="Manufacturer_Part_Number">GRM188D71A106MA73J</field>
+        <field name="Mouser Part Number">81-GRM188D71A106MA3J</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Murata-Electronics/GRM188D71A106MA73J?qs=hNud%2FORuBR3g0t9KhbQaoQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="GRM188D71A106MA73J" description="Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm"/>
+      <property name="Description" value="Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm"/>
+      <property name="Height" value="0.9"/>
+      <property name="Mouser Part Number" value="81-GRM188D71A106MA3J"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Murata-Electronics/GRM188D71A106MA73J?qs=hNud%2FORuBR3g0t9KhbQaoQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="Murata Electronics"/>
+      <property name="Manufacturer_Part_Number" value="GRM188D71A106MA73J"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e3f747c1-588a-47b7-a861-6ef6f38c2fe7</tstamps>
+    </comp>
+    <comp ref="C14">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>58a00c89-922c-4a65-a075-19b1e8b5c384</tstamps>
+    </comp>
+    <comp ref="C15">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8fdc4303-d025-48cd-943e-c6f50dba1735</tstamps>
+    </comp>
+    <comp ref="C16">
+      <value>104</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C104M5RACTU" description="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C104M5R"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C104M5RACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>039fd7d1-e91c-482d-bb79-562cf8ea0f8b</tstamps>
+    </comp>
+    <comp ref="C17">
+      <value>22p</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1007_X8R_ULTRA_150C_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C220K5HACTU</field>
+        <field name="Mouser Part Number">80-C0805C220K5HACTU</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C220K5HACTU?qs=W0yvOO0ixfEHOdsIsVM%2FuQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C220K5HACTU" description="SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks"/>
+      <property name="Description" value="SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C220K5HACTU"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C220K5HACTU?qs=W0yvOO0ixfEHOdsIsVM%2FuQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C220K5HACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>48bd845d-c7d7-47be-94d8-7036e025157a</tstamps>
+    </comp>
+    <comp ref="C18">
+      <value>22p</value>
+      <footprint>SamacSys_Parts:C0805</footprint>
+      <datasheet>https://content.kemet.com/datasheets/KEM_C1007_X8R_ULTRA_150C_SMD.pdf</datasheet>
+      <fields>
+        <field name="Description">SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C220K5HACTU</field>
+        <field name="Mouser Part Number">80-C0805C220K5HACTU</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C220K5HACTU?qs=W0yvOO0ixfEHOdsIsVM%2FuQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="C0805C220K5HACTU" description="SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks"/>
+      <property name="Description" value="SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="80-C0805C220K5HACTU"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/KEMET/C0805C220K5HACTU?qs=W0yvOO0ixfEHOdsIsVM%2FuQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="KEMET"/>
+      <property name="Manufacturer_Part_Number" value="C0805C220K5HACTU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9f070e71-d2d3-4f78-b875-031c4b09ccea</tstamps>
+    </comp>
+    <comp ref="IC1">
+      <value>TC1263-3.3VOATR</value>
+      <footprint>SamacSys_Parts:SOIC127P600X175-8N</footprint>
+      <datasheet>http://ww1.microchip.com/downloads/en/DeviceDoc/21374D.pdf</datasheet>
+      <fields>
+        <field name="Description">LDO Voltage Regulators 500mA Fixed Out Adj</field>
+        <field name="Height">1.75</field>
+        <field name="Manufacturer_Name">Microchip</field>
+        <field name="Manufacturer_Part_Number">TC1263-3.3VOATR</field>
+        <field name="Mouser Part Number">579-TC1263-3.3VOATR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Microchip-Technology/TC1263-33VOATR?qs=JKWmWPM4binFIJC0VNJYCQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="TC1263-3.3VOATR" description="LDO Voltage Regulators 500mA Fixed Out Adj"/>
+      <property name="Description" value="LDO Voltage Regulators 500mA Fixed Out Adj"/>
+      <property name="Height" value="1.75"/>
+      <property name="Mouser Part Number" value="579-TC1263-3.3VOATR"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Microchip-Technology/TC1263-33VOATR?qs=JKWmWPM4binFIJC0VNJYCQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="Microchip"/>
+      <property name="Manufacturer_Part_Number" value="TC1263-3.3VOATR"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="LDO Voltage Regulators 500mA Fixed Out Adj"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d4e90775-ce26-4cc9-989a-74368cd75b38</tstamps>
+    </comp>
+    <comp ref="IC2">
+      <value>VEML7700-TT</value>
+      <footprint>SamacSys_Parts:VEML7700</footprint>
+      <datasheet>https://www.arrow.com/en/products/veml7700-tt/vishay</datasheet>
+      <fields>
+        <field name="Description">16Bit Ambient Light Sensor I2C 6.8x2.3mm</field>
+        <field name="Manufacturer_Name">Vishay</field>
+        <field name="Manufacturer_Part_Number">VEML7700-TT</field>
+        <field name="Mouser Part Number">78-VEML7700-TT</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Vishay-Semiconductors/VEML7700-TT?qs=BcfjnG7NVaXdL6DJFdWbdw%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="VEML7700-TT" description="16Bit Ambient Light Sensor I2C 6.8x2.3mm"/>
+      <property name="Description" value="16Bit Ambient Light Sensor I2C 6.8x2.3mm"/>
+      <property name="Height" value=""/>
+      <property name="Mouser Part Number" value="78-VEML7700-TT"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Vishay-Semiconductors/VEML7700-TT?qs=BcfjnG7NVaXdL6DJFdWbdw%3D%3D"/>
+      <property name="Manufacturer_Name" value="Vishay"/>
+      <property name="Manufacturer_Part_Number" value="VEML7700-TT"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="16Bit Ambient Light Sensor I2C 6.8x2.3mm"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e8eeabc0-80aa-4bc5-8871-7ff52d935d7f</tstamps>
+    </comp>
+    <comp ref="IC3">
+      <value>ATMEGA328PB-AU</value>
+      <footprint>SamacSys_Parts:QFP80P900X900X120-32N</footprint>
+      <fields>
+        <field name="Description">ATMEL - ATMEGA328PB-AU - MCU, 8BIT, ATMEGA, 20MHZ, TQFP-32</field>
+        <field name="Height">1.2</field>
+        <field name="Manufacturer_Name">Microchip</field>
+        <field name="Manufacturer_Part_Number">ATMEGA328PB-AU</field>
+        <field name="Mouser Part Number">556-ATMEGA328PB-AU</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Microchip-Technology/ATMEGA328PB-AU?qs=jy4bLUHv09hbFONgGrqPbw%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="ATMEGA328PB-AU" description="ATMEL - ATMEGA328PB-AU - MCU, 8BIT, ATMEGA, 20MHZ, TQFP-32"/>
+      <property name="Description" value="ATMEL - ATMEGA328PB-AU - MCU, 8BIT, ATMEGA, 20MHZ, TQFP-32"/>
+      <property name="Height" value="1.2"/>
+      <property name="Mouser Part Number" value="556-ATMEGA328PB-AU"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Microchip-Technology/ATMEGA328PB-AU?qs=jy4bLUHv09hbFONgGrqPbw%3D%3D"/>
+      <property name="Manufacturer_Name" value="Microchip"/>
+      <property name="Manufacturer_Part_Number" value="ATMEGA328PB-AU"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="ATMEL - ATMEGA328PB-AU - MCU, 8BIT, ATMEGA, 20MHZ, TQFP-32"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>fc937875-b5b5-4f8a-8544-3819a9a62c52</tstamps>
+    </comp>
+    <comp ref="J1">
+      <value>USB4125-GF-A-0190</value>
+      <footprint>SamacSys_Parts:USB4125GFA0190</footprint>
+      <fields>
+        <field name="Description">USB Connectors USB C Rec GF RA 6P SMT TH Stakes 1.9mm</field>
+        <field name="Manufacturer_Name">GCT (GLOBAL CONNECTOR TECHNOLOGY)</field>
+        <field name="Manufacturer_Part_Number">USB4125-GF-A-0190</field>
+        <field name="Mouser Part Number">640-USB4125-GF-A-190</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/GCT/USB4125-GF-A-0190?qs=QNEnbhJQKvbCz4hEJBS24w%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="USB4125-GF-A-0190" description="USB Connectors USB C Rec GF RA 6P SMT TH Stakes 1.9mm"/>
+      <property name="Description" value="USB Connectors USB C Rec GF RA 6P SMT TH Stakes 1.9mm"/>
+      <property name="Height" value=""/>
+      <property name="Mouser Part Number" value="640-USB4125-GF-A-190"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/GCT/USB4125-GF-A-0190?qs=QNEnbhJQKvbCz4hEJBS24w%3D%3D"/>
+      <property name="Manufacturer_Name" value="GCT (GLOBAL CONNECTOR TECHNOLOGY)"/>
+      <property name="Manufacturer_Part_Number" value="USB4125-GF-A-0190"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="USB Connectors USB C Rec GF RA 6P SMT TH Stakes 1.9mm"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>10ef6300-1150-4893-b652-e123268858db</tstamps>
+    </comp>
+    <comp ref="J2">
+      <value>Conn_01x01_Pin</value>
+      <footprint>Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector" part="Conn_01x01_Pin" description="Generic connector, single row, 01x01, script generated"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x01, script generated"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>088f6dd9-dac9-49ca-a21c-12fcc7590d93</tstamps>
+    </comp>
+    <comp ref="J3">
+      <value>Conn_01x06_Pin</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector" part="Conn_01x06_Pin" description="Generic connector, single row, 01x06, script generated"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x06, script generated"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>42538a39-4304-4b51-8663-b6a73013f88c</tstamps>
+    </comp>
+    <comp ref="J4">
+      <value>Conn_01x03_Pin</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector" part="Conn_01x03_Pin" description="Generic connector, single row, 01x03, script generated"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x03, script generated"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>55b582f4-c8cc-4ef5-8359-90b9e08d4efa</tstamps>
+    </comp>
+    <comp ref="LED1">
+      <value>LED</value>
+      <footprint>LED_SMD:LED_0805_2012Metric</footprint>
+      <libsource lib="Device" part="LED" description="Light emitting diode"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Light emitting diode"/>
+      <property name="ki_keywords" value="LED diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5ddef97f-bfe3-4c59-bcec-e1fece22dba0</tstamps>
+    </comp>
+    <comp ref="Q1">
+      <value>BSS138DW-7-F</value>
+      <footprint>SamacSys_Parts:SOT65P210X110-6N</footprint>
+      <fields>
+        <field name="Description">MOSFET Dual N-Channel 50V 0.2A SOT363 Diodes Inc BSS138DW-7-F Dual N-channel MOSFET Transistor, 0.2 A, 50 V, 6-Pin SOT-363</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">Diodes Inc.</field>
+        <field name="Manufacturer_Part_Number">BSS138DW-7-F</field>
+        <field name="Mouser Part Number">621-BSS138DW-F</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Diodes-Incorporated/BSS138DW-7-F?qs=rGAXPo9uwV10UlZnPRLyGg%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="BSS138DW-7-F" description="MOSFET Dual N-Channel 50V 0.2A SOT363 Diodes Inc BSS138DW-7-F Dual N-channel MOSFET Transistor, 0.2 A, 50 V, 6-Pin SOT-363"/>
+      <property name="Description" value="MOSFET Dual N-Channel 50V 0.2A SOT363 Diodes Inc BSS138DW-7-F Dual N-channel MOSFET Transistor, 0.2 A, 50 V, 6-Pin SOT-363"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="621-BSS138DW-F"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Diodes-Incorporated/BSS138DW-7-F?qs=rGAXPo9uwV10UlZnPRLyGg%3D%3D"/>
+      <property name="Manufacturer_Name" value="Diodes Inc."/>
+      <property name="Manufacturer_Part_Number" value="BSS138DW-7-F"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="MOSFET Dual N-Channel 50V 0.2A SOT363 Diodes Inc BSS138DW-7-F Dual N-channel MOSFET Transistor, 0.2 A, 50 V, 6-Pin SOT-363"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c4b6c44a-0c5f-41f4-8ea3-7241225d122c</tstamps>
+    </comp>
+    <comp ref="R1">
+      <value>5K1</value>
+      <footprint>Samuel_Library:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>315b46a2-4674-485c-ac70-2716e221be20</tstamps>
+    </comp>
+    <comp ref="R2">
+      <value>5K1</value>
+      <footprint>Samuel_Library:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b4b7eaae-48f3-4c44-b2d0-ff8e9de593b6</tstamps>
+    </comp>
+    <comp ref="R3">
+      <value>100K</value>
+      <footprint>Samuel_Library:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9f89890a-a93f-4c4a-88af-4c20fa5e50d9</tstamps>
+    </comp>
+    <comp ref="R4">
+      <value>130R</value>
+      <footprint>Samuel_Library:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>67f3e961-7445-4c8a-bddb-36809bfedb9c</tstamps>
+    </comp>
+    <comp ref="R5">
+      <value>300R</value>
+      <footprint>Samuel_Library:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3883a888-ab53-43c3-b478-6a7dc8bb181a</tstamps>
+    </comp>
+    <comp ref="R6">
+      <value>300R</value>
+      <footprint>Samuel_Library:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9b7fdb98-0fe5-4cd8-a82d-c47c96a7ad5f</tstamps>
+    </comp>
+    <comp ref="RN1">
+      <value>10K</value>
+      <footprint>SamacSys_Parts:YC124JR0710KL</footprint>
+      <datasheet>https://www.yageo.com/upload/media/product/productsearch/datasheet/rchip/PYu-YC_TC_group_51_RoHS_L_9.pdf</datasheet>
+      <fields>
+        <field name="Description">10k Ohm +/-5% 62.5mW Power Per Element Isolated 4 Resistor Network/Array +/-200ppm/C 0804, Convex, Long Side Terminals</field>
+        <field name="Height">0.55</field>
+        <field name="Manufacturer_Name">YAGEO</field>
+        <field name="Manufacturer_Part_Number">YC124-JR-0710KL</field>
+        <field name="Mouser Part Number">603-YC124-JR-0710KL</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/YAGEO/YC124-JR-0710KL?qs=o9qB%2F%252BVTi4UUU%2FolE1vUew%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="YC124-JR-0710KL" description="10k Ohm +/-5% 62.5mW Power Per Element Isolated 4 Resistor Network/Array +/-200ppm/C 0804, Convex, Long Side Terminals"/>
+      <property name="Description" value="10k Ohm +/-5% 62.5mW Power Per Element Isolated 4 Resistor Network/Array +/-200ppm/C 0804, Convex, Long Side Terminals"/>
+      <property name="Height" value="0.55"/>
+      <property name="Mouser Part Number" value="603-YC124-JR-0710KL"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/YAGEO/YC124-JR-0710KL?qs=o9qB%2F%252BVTi4UUU%2FolE1vUew%3D%3D"/>
+      <property name="Manufacturer_Name" value="YAGEO"/>
+      <property name="Manufacturer_Part_Number" value="YC124-JR-0710KL"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="10k Ohm +/-5% 62.5mW Power Per Element Isolated 4 Resistor Network/Array +/-200ppm/C 0804, Convex, Long Side Terminals"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f095427e-ceda-40ed-b7ba-6e7c4a44f2f6</tstamps>
+    </comp>
+    <comp ref="SET1">
+      <value>TS02-66-50-BK-260-SCR-D</value>
+      <footprint>SamacSys_Parts:TS026650BK260SCRD</footprint>
+      <datasheet>https://www.cuidevices.com/product/resource/ts02.pdf</datasheet>
+      <fields>
+        <field name="Description">Tactile Switches 6 x 6 mm, 5 mm Act Height, 260 gf, Black, Short Crimped, Through Hole, SPST,</field>
+        <field name="Height">5.2</field>
+        <field name="Manufacturer_Name">CUI Devices</field>
+        <field name="Manufacturer_Part_Number">TS02-66-50-BK-260-SCR-D</field>
+        <field name="Mouser Part Number">179-TS026650BK260SCR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/CUI-Devices/TS02-66-50-BK-260-SCR-D?qs=A6eO%252BMLsxmQtNldP04biKA%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="TS02-66-50-BK-260-SCR-D" description="Tactile Switches 6 x 6 mm, 5 mm Act Height, 260 gf, Black, Short Crimped, Through Hole, SPST,"/>
+      <property name="Description" value="Tactile Switches 6 x 6 mm, 5 mm Act Height, 260 gf, Black, Short Crimped, Through Hole, SPST,"/>
+      <property name="Height" value="5.2"/>
+      <property name="Mouser Part Number" value="179-TS026650BK260SCR"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/CUI-Devices/TS02-66-50-BK-260-SCR-D?qs=A6eO%252BMLsxmQtNldP04biKA%3D%3D"/>
+      <property name="Manufacturer_Name" value="CUI Devices"/>
+      <property name="Manufacturer_Part_Number" value="TS02-66-50-BK-260-SCR-D"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Tactile Switches 6 x 6 mm, 5 mm Act Height, 260 gf, Black, Short Crimped, Through Hole, SPST,"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>52a386c5-b4b0-439c-bed0-2c71484708f2</tstamps>
+    </comp>
+    <comp ref="TALLY#1">
+      <value>SD-1210</value>
+      <footprint>SamacSys_Parts:SD1210</footprint>
+      <datasheet>https://www.mouser.ch/datasheet/2/972/sd_1000_26sd_2000-1827479.pdf</datasheet>
+      <fields>
+        <field name="Description">Coded Rotary Switches dip rotary code hex, real code, top adj. with + slot</field>
+        <field name="Height">4.2</field>
+        <field name="Manufacturer_Name">NIDEC COPAL</field>
+        <field name="Manufacturer_Part_Number">SD-1210</field>
+        <field name="Mouser Part Number">229-SD-1210</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Nidec-Copal/SD-1210?qs=XeJtXLiO41R8TV%2F4jbbpgQ%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="SD-1210" description="Coded Rotary Switches dip rotary code hex, real code, top adj. with + slot"/>
+      <property name="Description" value="Coded Rotary Switches dip rotary code hex, real code, top adj. with + slot"/>
+      <property name="Height" value="4.2"/>
+      <property name="Mouser Part Number" value="229-SD-1210"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Nidec-Copal/SD-1210?qs=XeJtXLiO41R8TV%2F4jbbpgQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="NIDEC COPAL"/>
+      <property name="Manufacturer_Part_Number" value="SD-1210"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Coded Rotary Switches dip rotary code hex, real code, top adj. with + slot"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>84c2309b-32a0-424d-ad9f-9b8d5086b82b</tstamps>
+    </comp>
+    <comp ref="U1">
+      <value>LED 1</value>
+      <footprint>Samuel_Library:SK6812_SIDE-A</footprint>
+      <libsource lib="Samuel_Library" part="SK6812_SIDE-A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3e7cc8ae-6f6e-4adc-b2e4-471a40047aa8</tstamps>
+    </comp>
+    <comp ref="U2">
+      <value>LED 2</value>
+      <footprint>Samuel_Library:SK6812_SIDE-A</footprint>
+      <libsource lib="Samuel_Library" part="SK6812_SIDE-A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>07d61879-216a-4cb7-b416-81e10f416160</tstamps>
+    </comp>
+    <comp ref="U3">
+      <value>LED 3</value>
+      <footprint>Samuel_Library:SK6812_SIDE-A</footprint>
+      <libsource lib="Samuel_Library" part="SK6812_SIDE-A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9cffdd90-b975-4726-903e-67aef69ed4c1</tstamps>
+    </comp>
+    <comp ref="U4">
+      <value>LED 4</value>
+      <footprint>Samuel_Library:SK6812_SIDE-A</footprint>
+      <libsource lib="Samuel_Library" part="SK6812_SIDE-A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>86e1d8af-5fed-47c8-9062-3af761d179e0</tstamps>
+    </comp>
+    <comp ref="U5">
+      <value>LED 5</value>
+      <footprint>Samuel_Library:SK6812_SIDE-A</footprint>
+      <libsource lib="Samuel_Library" part="SK6812_SIDE-A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>32829fb7-0cb7-4ade-b89e-fe72b5cffda4</tstamps>
+    </comp>
+    <comp ref="U6">
+      <value>LED 6</value>
+      <footprint>Samuel_Library:SK6812_SIDE-A</footprint>
+      <libsource lib="Samuel_Library" part="SK6812_SIDE-A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f5f26c04-afcb-4774-8fb6-f0462e5ac19e</tstamps>
+    </comp>
+    <comp ref="U7">
+      <value>LED 7</value>
+      <footprint>Samuel_Library:SK6812_SIDE-A</footprint>
+      <libsource lib="Samuel_Library" part="SK6812_SIDE-A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>eca5bd4e-ce4c-44d4-a41d-8f27c84141e9</tstamps>
+    </comp>
+    <comp ref="U8">
+      <value>LED 8</value>
+      <footprint>Samuel_Library:SK6812_SIDE-A</footprint>
+      <libsource lib="Samuel_Library" part="SK6812_SIDE-A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2e3a3ef8-d4ea-4919-b32c-08ed1fea655f</tstamps>
+    </comp>
+    <comp ref="U9">
+      <value>NRF24L01</value>
+      <footprint>MySensors:NRF24L01-SMD</footprint>
+      <libsource lib="MySensors" part="NRF24L01" description="NRF24L01+"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="NRF24L01+"/>
+      <property name="ki_keywords" value="NRF 2G4 radio module"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>7271b564-3147-4867-a786-08f5e0b1faac</tstamps>
+    </comp>
+    <comp ref="Y1">
+      <value>16M</value>
+      <footprint>SamacSys_Parts:ABLS</footprint>
+      <datasheet>https://abracon.com/Resonators/abls.pdf</datasheet>
+      <fields>
+        <field name="Description">Oscillator MEMS 120MHz +/-10ppm (Stability) 15pF LVCMOS 55% 1.8V/2.5V/3.3V Automotive 4-Pin QFN SMD T/R</field>
+        <field name="Manufacturer_Name">ABRACON</field>
+        <field name="Manufacturer_Part_Number">ABLS-16.000MHz-16-A-4-H-T</field>
+        <field name="Mouser Part Number">815-LS16000MHZ16A4HT</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/ABRACON/ABLS-16.000MHZ-16-A-4-H-T?qs=vLWxofP3U2z6hhU1at4Vrw%3D%3D</field>
+      </fields>
+      <libsource lib="SamacSys_Parts" part="ABLS-16.000MHz-16-A-4-H-T" description="Oscillator MEMS 120MHz +/-10ppm (Stability) 15pF LVCMOS 55% 1.8V/2.5V/3.3V Automotive 4-Pin QFN SMD T/R"/>
+      <property name="Description" value="Oscillator MEMS 120MHz +/-10ppm (Stability) 15pF LVCMOS 55% 1.8V/2.5V/3.3V Automotive 4-Pin QFN SMD T/R"/>
+      <property name="Height" value=""/>
+      <property name="Mouser Part Number" value="815-LS16000MHZ16A4HT"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/ABRACON/ABLS-16.000MHZ-16-A-4-H-T?qs=vLWxofP3U2z6hhU1at4Vrw%3D%3D"/>
+      <property name="Manufacturer_Name" value="ABRACON"/>
+      <property name="Manufacturer_Part_Number" value="ABLS-16.000MHz-16-A-4-H-T"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="TallyLight.kicad_sch"/>
+      <property name="ki_description" value="Oscillator MEMS 120MHz +/-10ppm (Stability) 15pF LVCMOS 55% 1.8V/2.5V/3.3V Automotive 4-Pin QFN SMD T/R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>134941bb-24ac-47c2-b3b2-2e74730ea10e</tstamps>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Connector" part="Conn_01x01_Pin">
+      <description>Generic connector, single row, 01x01, script generated</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x01_Pin</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="Conn_01x03_Pin">
+      <description>Generic connector, single row, 01x03, script generated</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x03_Pin</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="Conn_01x06_Pin">
+      <description>Generic connector, single row, 01x06, script generated</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x06_Pin</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="LED">
+      <description>Light emitting diode</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>LED*</fp>
+        <fp>LED_SMD:*</fp>
+        <fp>LED_THT:*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">LED</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="MySensors" part="NRF24L01">
+      <description>NRF24L01+</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">NRF24L01</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="power_in"/>
+        <pin num="2" name="VCC" type="power_in"/>
+        <pin num="3" name="CE" type="input"/>
+        <pin num="4" name="CSN" type="input"/>
+        <pin num="5" name="SCK" type="input"/>
+        <pin num="6" name="MOSI" type="input"/>
+        <pin num="7" name="MISO" type="input"/>
+        <pin num="8" name="IRQ" type="output"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="ABLS-16.000MHz-16-A-4-H-T">
+      <description>Oscillator MEMS 120MHz +/-10ppm (Stability) 15pF LVCMOS 55% 1.8V/2.5V/3.3V Automotive 4-Pin QFN SMD T/R</description>
+      <docs>https://abracon.com/Resonators/abls.pdf</docs>
+      <fields>
+        <field name="Reference">Y</field>
+        <field name="Value">ABLS-16.000MHz-16-A-4-H-T</field>
+        <field name="Footprint">ABLS</field>
+        <field name="Datasheet">https://abracon.com/Resonators/abls.pdf</field>
+        <field name="Description">Oscillator MEMS 120MHz +/-10ppm (Stability) 15pF LVCMOS 55% 1.8V/2.5V/3.3V Automotive 4-Pin QFN SMD T/R</field>
+        <field name="Mouser Part Number">815-LS16000MHZ16A4HT</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/ABRACON/ABLS-16.000MHZ-16-A-4-H-T?qs=vLWxofP3U2z6hhU1at4Vrw%3D%3D</field>
+        <field name="Manufacturer_Name">ABRACON</field>
+        <field name="Manufacturer_Part_Number">ABLS-16.000MHz-16-A-4-H-T</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="ATMEGA328PB-AU">
+      <description>ATMEL - ATMEGA328PB-AU - MCU, 8BIT, ATMEGA, 20MHZ, TQFP-32</description>
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">ATMEGA328PB-AU</field>
+        <field name="Footprint">QFP80P900X900X120-32N</field>
+        <field name="Description">ATMEL - ATMEGA328PB-AU - MCU, 8BIT, ATMEGA, 20MHZ, TQFP-32</field>
+        <field name="Height">1.2</field>
+        <field name="Mouser Part Number">556-ATMEGA328PB-AU</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Microchip-Technology/ATMEGA328PB-AU?qs=jy4bLUHv09hbFONgGrqPbw%3D%3D</field>
+        <field name="Manufacturer_Name">Microchip</field>
+        <field name="Manufacturer_Part_Number">ATMEGA328PB-AU</field>
+      </fields>
+      <pins>
+        <pin num="1" name="(OC2B/INT1/PTCXY)_PD3" type="passive"/>
+        <pin num="2" name="(XCK0/T0/PTCXY)_PD4" type="passive"/>
+        <pin num="3" name="(SDA1/ICP4/ACO/PTCXY)_PE0" type="passive"/>
+        <pin num="4" name="VCC" type="passive"/>
+        <pin num="5" name="GND_1" type="passive"/>
+        <pin num="6" name="(SCL1/T4/PTCXY)_PE1" type="passive"/>
+        <pin num="7" name="(XTAL1/TOSC1)_PB6" type="passive"/>
+        <pin num="8" name="(XTAL2/TOSC2)_PB7" type="passive"/>
+        <pin num="9" name="(OC0B/T1/PTCXY)_PD5" type="passive"/>
+        <pin num="10" name="(OC0A/PTCXY/AIN0)_PD6" type="passive"/>
+        <pin num="11" name="(PTCXY/AIN1)_PD7" type="passive"/>
+        <pin num="12" name="(ICP1/CLKO/PTCXY)_PB0" type="passive"/>
+        <pin num="13" name="(OC1A/PTCXY)_PB1" type="passive"/>
+        <pin num="14" name="(~{SS0}/OC1B/PTCXY)_PB2" type="passive"/>
+        <pin num="15" name="(MOSI0/TXD1/OC2A/PTCXY)_PB3" type="passive"/>
+        <pin num="16" name="(MISO0/RXD1/PTCXY)_PB4" type="passive"/>
+        <pin num="17" name="PB5_(PTCXY/XCK0/SCK0)" type="passive"/>
+        <pin num="18" name="AVCC" type="passive"/>
+        <pin num="19" name="PE2_(ADC6/PTCY/ICP3/~{SS1})" type="passive"/>
+        <pin num="20" name="AREF" type="passive"/>
+        <pin num="21" name="GND_2" type="passive"/>
+        <pin num="22" name="PE3_(ADC7/PTCY/T3/MOSI1)" type="passive"/>
+        <pin num="23" name="PC0_(ADC0/PTCY/MISO1)" type="passive"/>
+        <pin num="24" name="PC1_(ADC1/PTCY/SCK1)" type="passive"/>
+        <pin num="25" name="PC2_(ADC2/PTCY)" type="passive"/>
+        <pin num="26" name="PC3_(ADC3/PTCY)" type="passive"/>
+        <pin num="27" name="PC4_(ADC4/PTCY/SDA0)" type="passive"/>
+        <pin num="28" name="PC5_(ADC5/PTCY/SCL0)" type="passive"/>
+        <pin num="29" name="PC6_(~{RESET})" type="passive"/>
+        <pin num="30" name="PD0_(PTCXY/OC3A/RXD0)" type="passive"/>
+        <pin num="31" name="PD1_(PTCXY/OC4A/TXD0)" type="passive"/>
+        <pin num="32" name="PD2_(PTCXY/INT0/OC3B/OC4B)" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="BSS138DW-7-F">
+      <description>MOSFET Dual N-Channel 50V 0.2A SOT363 Diodes Inc BSS138DW-7-F Dual N-channel MOSFET Transistor, 0.2 A, 50 V, 6-Pin SOT-363</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">BSS138DW-7-F</field>
+        <field name="Footprint">SOT65P210X110-6N</field>
+        <field name="Description">MOSFET Dual N-Channel 50V 0.2A SOT363 Diodes Inc BSS138DW-7-F Dual N-channel MOSFET Transistor, 0.2 A, 50 V, 6-Pin SOT-363</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">621-BSS138DW-F</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Diodes-Incorporated/BSS138DW-7-F?qs=rGAXPo9uwV10UlZnPRLyGg%3D%3D</field>
+        <field name="Manufacturer_Name">Diodes Inc.</field>
+        <field name="Manufacturer_Part_Number">BSS138DW-7-F</field>
+      </fields>
+      <pins>
+        <pin num="1" name="S2" type="passive"/>
+        <pin num="2" name="G2" type="passive"/>
+        <pin num="3" name="D1" type="passive"/>
+        <pin num="4" name="S1" type="passive"/>
+        <pin num="5" name="G1" type="passive"/>
+        <pin num="6" name="D2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="C0805C104M5RACTU">
+      <description>SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</description>
+      <docs>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</docs>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C0805C104M5RACTU</field>
+        <field name="Footprint">C0805</field>
+        <field name="Datasheet">https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</field>
+        <field name="Description">SMD Comm X7R, Ceramic, 0.1 uF, 20%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 10 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">80-C0805C104M5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C104M5RACTU?qs=VOOUd%252Bza08qHu13WgNByHQ%3D%3D</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C104M5RACTU</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="C0805C220K5HACTU">
+      <description>SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks</description>
+      <docs>https://content.kemet.com/datasheets/KEM_C1007_X8R_ULTRA_150C_SMD.pdf</docs>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C0805C220K5HACTU</field>
+        <field name="Footprint">C0805</field>
+        <field name="Datasheet">https://content.kemet.com/datasheets/KEM_C1007_X8R_ULTRA_150C_SMD.pdf</field>
+        <field name="Description">SMD Comm X8R HT150C, Ceramic, 22 pF, 10%, 50 VDC, 125 VDC, 150C, -55C, X8R, SMD, MLCC, High Temperature, Ultra-Stable, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">80-C0805C220K5HACTU</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C220K5HACTU?qs=W0yvOO0ixfEHOdsIsVM%2FuQ%3D%3D</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C220K5HACTU</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="C0805C471K5RACTU">
+      <description>SMD Comm X7R, Ceramic, 470 pF, 10%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</description>
+      <docs>https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</docs>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C0805C471K5RACTU</field>
+        <field name="Footprint">C0805</field>
+        <field name="Datasheet">https://content.kemet.com/datasheets/KEM_C1002_X7R_SMD.pdf</field>
+        <field name="Description">SMD Comm X7R, Ceramic, 470 pF, 10%, 50 VDC, 125 VDC, 125?C, -55?C, X7R, SMD, MLCC, Temperature Stable, Class II, 2.5 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 80</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">80-C0805C471K5R</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/KEMET/C0805C471K5RACTU?qs=zLJ08xwufm6Yml9V9rLpFw%3D%3D</field>
+        <field name="Manufacturer_Name">KEMET</field>
+        <field name="Manufacturer_Part_Number">C0805C471K5RACTU</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="CL21B105KBFNNNG">
+      <description>Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R</description>
+      <docs>https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-DGA8/2478774.pdf</docs>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">CL21B105KBFNNNG</field>
+        <field name="Footprint">CAPC2012X135N</field>
+        <field name="Datasheet">https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-DGA8/2478774.pdf</field>
+        <field name="Description">Cap Ceramic 1uF 50V X7R 10% Pad SMD 0805 125C T/R</field>
+        <field name="Height">1.35</field>
+        <field name="Mouser Part Number">187-CL21B105KBFNNNG</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Samsung-Electro-Mechanics/CL21B105KBFNNNG?qs=hqM3L16%252Bxlf%252BLSavaAk0sA%3D%3D</field>
+        <field name="Manufacturer_Name">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer_Part_Number">CL21B105KBFNNNG</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="GRM188D71A106MA73J">
+      <description>Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm</description>
+      <docs>https://psearch.en.murata.com/capacitor/product/GRM188D71A106MA73%23.html</docs>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">GRM188D71A106MA73J</field>
+        <field name="Footprint">CAPC1608X90N</field>
+        <field name="Datasheet">https://psearch.en.murata.com/capacitor/product/GRM188D71A106MA73%23.html</field>
+        <field name="Description">Capacitor GRM18_0.20 L=1.6mm W=0.8mm T=0.8mm</field>
+        <field name="Height">0.9</field>
+        <field name="Mouser Part Number">81-GRM188D71A106MA3J</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Murata-Electronics/GRM188D71A106MA73J?qs=hNud%2FORuBR3g0t9KhbQaoQ%3D%3D</field>
+        <field name="Manufacturer_Name">Murata Electronics</field>
+        <field name="Manufacturer_Part_Number">GRM188D71A106MA73J</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="SD-1210">
+      <description>Coded Rotary Switches dip rotary code hex, real code, top adj. with + slot</description>
+      <docs>https://www.mouser.ch/datasheet/2/972/sd_1000_26sd_2000-1827479.pdf</docs>
+      <fields>
+        <field name="Reference">S</field>
+        <field name="Value">SD-1210</field>
+        <field name="Footprint">SD1210</field>
+        <field name="Datasheet">https://www.mouser.ch/datasheet/2/972/sd_1000_26sd_2000-1827479.pdf</field>
+        <field name="Description">Coded Rotary Switches dip rotary code hex, real code, top adj. with + slot</field>
+        <field name="Height">4.2</field>
+        <field name="Mouser Part Number">229-SD-1210</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Nidec-Copal/SD-1210?qs=XeJtXLiO41R8TV%2F4jbbpgQ%3D%3D</field>
+        <field name="Manufacturer_Name">NIDEC COPAL</field>
+        <field name="Manufacturer_Part_Number">SD-1210</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+        <pin num="C1" name="C1" type="passive"/>
+        <pin num="C2" name="C2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="TC1263-3.3VOATR">
+      <description>LDO Voltage Regulators 500mA Fixed Out Adj</description>
+      <docs>http://ww1.microchip.com/downloads/en/DeviceDoc/21374D.pdf</docs>
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">TC1263-3.3VOATR</field>
+        <field name="Footprint">SOIC127P600X175-8N</field>
+        <field name="Datasheet">http://ww1.microchip.com/downloads/en/DeviceDoc/21374D.pdf</field>
+        <field name="Description">LDO Voltage Regulators 500mA Fixed Out Adj</field>
+        <field name="Height">1.75</field>
+        <field name="Mouser Part Number">579-TC1263-3.3VOATR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Microchip-Technology/TC1263-33VOATR?qs=JKWmWPM4binFIJC0VNJYCQ%3D%3D</field>
+        <field name="Manufacturer_Name">Microchip</field>
+        <field name="Manufacturer_Part_Number">TC1263-3.3VOATR</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VOUT" type="passive"/>
+        <pin num="2" name="GND" type="passive"/>
+        <pin num="3" name="NC_1" type="passive"/>
+        <pin num="4" name="BYPASS" type="passive"/>
+        <pin num="5" name="~{ERROR}" type="passive"/>
+        <pin num="6" name="~{SHDN}" type="passive"/>
+        <pin num="7" name="NC_2" type="passive"/>
+        <pin num="8" name="VIN" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="TS02-66-50-BK-260-SCR-D">
+      <description>Tactile Switches 6 x 6 mm, 5 mm Act Height, 260 gf, Black, Short Crimped, Through Hole, SPST,</description>
+      <docs>https://www.cuidevices.com/product/resource/ts02.pdf</docs>
+      <fields>
+        <field name="Reference">S</field>
+        <field name="Value">TS02-66-50-BK-260-SCR-D</field>
+        <field name="Footprint">TS026650BK260SCRD</field>
+        <field name="Datasheet">https://www.cuidevices.com/product/resource/ts02.pdf</field>
+        <field name="Description">Tactile Switches 6 x 6 mm, 5 mm Act Height, 260 gf, Black, Short Crimped, Through Hole, SPST,</field>
+        <field name="Height">5.2</field>
+        <field name="Mouser Part Number">179-TS026650BK260SCR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/CUI-Devices/TS02-66-50-BK-260-SCR-D?qs=A6eO%252BMLsxmQtNldP04biKA%3D%3D</field>
+        <field name="Manufacturer_Name">CUI Devices</field>
+        <field name="Manufacturer_Part_Number">TS02-66-50-BK-260-SCR-D</field>
+      </fields>
+      <pins>
+        <pin num="1" name="NO_1" type="passive"/>
+        <pin num="2" name="NO_2" type="passive"/>
+        <pin num="3" name="COM_1" type="passive"/>
+        <pin num="4" name="COM_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="USB4125-GF-A-0190">
+      <description>USB Connectors USB C Rec GF RA 6P SMT TH Stakes 1.9mm</description>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">USB4125-GF-A-0190</field>
+        <field name="Footprint">USB4125GFA0190</field>
+        <field name="Description">USB Connectors USB C Rec GF RA 6P SMT TH Stakes 1.9mm</field>
+        <field name="Mouser Part Number">640-USB4125-GF-A-190</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/GCT/USB4125-GF-A-0190?qs=QNEnbhJQKvbCz4hEJBS24w%3D%3D</field>
+        <field name="Manufacturer_Name">GCT (GLOBAL CONNECTOR TECHNOLOGY)</field>
+        <field name="Manufacturer_Part_Number">USB4125-GF-A-0190</field>
+      </fields>
+      <pins>
+        <pin num="A5" name="CC1" type="passive"/>
+        <pin num="A9" name="VBUS_1" type="passive"/>
+        <pin num="A12" name="GND_1" type="passive"/>
+        <pin num="B5" name="CC2" type="passive"/>
+        <pin num="B9" name="VBUS_2" type="passive"/>
+        <pin num="B12" name="GND_2" type="passive"/>
+        <pin num="MH1" name="MH1" type="passive"/>
+        <pin num="MH2" name="MH2" type="passive"/>
+        <pin num="MH3" name="MH3" type="passive"/>
+        <pin num="MH4" name="MH4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="VEML7700-TT">
+      <description>16Bit Ambient Light Sensor I2C 6.8x2.3mm</description>
+      <docs>https://www.arrow.com/en/products/veml7700-tt/vishay</docs>
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">VEML7700-TT</field>
+        <field name="Footprint">VEML7700</field>
+        <field name="Datasheet">https://www.arrow.com/en/products/veml7700-tt/vishay</field>
+        <field name="Description">16Bit Ambient Light Sensor I2C 6.8x2.3mm</field>
+        <field name="Mouser Part Number">78-VEML7700-TT</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Vishay-Semiconductors/VEML7700-TT?qs=BcfjnG7NVaXdL6DJFdWbdw%3D%3D</field>
+        <field name="Manufacturer_Name">Vishay</field>
+        <field name="Manufacturer_Part_Number">VEML7700-TT</field>
+      </fields>
+      <pins>
+        <pin num="1" name="SCL" type="passive"/>
+        <pin num="2" name="VDD" type="passive"/>
+        <pin num="3" name="GND" type="passive"/>
+        <pin num="4" name="SDA" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SamacSys_Parts" part="YC124-JR-0710KL">
+      <description>10k Ohm +/-5% 62.5mW Power Per Element Isolated 4 Resistor Network/Array +/-200ppm/C 0804, Convex, Long Side Terminals</description>
+      <docs>https://www.yageo.com/upload/media/product/productsearch/datasheet/rchip/PYu-YC_TC_group_51_RoHS_L_9.pdf</docs>
+      <fields>
+        <field name="Reference">RN</field>
+        <field name="Value">YC124-JR-0710KL</field>
+        <field name="Footprint">YC124JR0710KL</field>
+        <field name="Datasheet">https://www.yageo.com/upload/media/product/productsearch/datasheet/rchip/PYu-YC_TC_group_51_RoHS_L_9.pdf</field>
+        <field name="Description">10k Ohm +/-5% 62.5mW Power Per Element Isolated 4 Resistor Network/Array +/-200ppm/C 0804, Convex, Long Side Terminals</field>
+        <field name="Height">0.55</field>
+        <field name="Mouser Part Number">603-YC124-JR-0710KL</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/YAGEO/YC124-JR-0710KL?qs=o9qB%2F%252BVTi4UUU%2FolE1vUew%3D%3D</field>
+        <field name="Manufacturer_Name">YAGEO</field>
+        <field name="Manufacturer_Part_Number">YC124-JR-0710KL</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Samuel_Library" part="SK6812_SIDE-A">
+      <fields>
+        <field name="Reference">U</field>
+      </fields>
+      <pins>
+        <pin num="1" name="DIN" type="input"/>
+        <pin num="2" name="VDD" type="input"/>
+        <pin num="3" name="DOUT" type="input"/>
+        <pin num="4" name="GND" type="input"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Connector">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Connector.kicad_sym</uri>
+    </library>
+    <library logical="Device">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Device.kicad_sym</uri>
+    </library>
+    <library logical="MySensors">
+      <uri>C:/Users/samue/OneDrive/Documents/KiCad_Libraries/mysensors_symbols/mysensors_radios.lib</uri>
+    </library>
+    <library logical="SamacSys_Parts">
+      <uri>C:/Users/samue/OneDrive/Documents/LibraryLoaderFiles/SamacSys_Parts.lib</uri>
+    </library>
+    <library logical="Samuel_Library">
+      <uri>C:/Users/samue/OneDrive/Documents/KiCad/7.0/symbols/Samuel_Library.kicad_sym</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="+3V3">
+      <node ref="3V1" pin="1" pinfunction="K" pintype="passive"/>
+      <node ref="C12" pin="1" pintype="passive"/>
+      <node ref="C9" pin="1" pintype="passive"/>
+      <node ref="IC1" pin="1" pinfunction="VOUT" pintype="passive"/>
+      <node ref="IC2" pin="2" pinfunction="VDD" pintype="passive"/>
+      <node ref="Q1" pin="2" pinfunction="G2" pintype="passive"/>
+      <node ref="Q1" pin="5" pinfunction="G1" pintype="passive"/>
+      <node ref="RN1" pin="5" pinfunction="5" pintype="passive"/>
+      <node ref="RN1" pin="6" pinfunction="6" pintype="passive"/>
+      <node ref="U9" pin="2" pinfunction="VCC" pintype="power_in"/>
+    </net>
+    <net code="2" name="+5V">
+      <node ref="5V1" pin="1" pinfunction="K" pintype="passive"/>
+      <node ref="C1" pin="2" pintype="passive"/>
+      <node ref="C11" pin="1" pintype="passive"/>
+      <node ref="C13" pin="1" pintype="passive"/>
+      <node ref="C14" pin="2" pintype="passive"/>
+      <node ref="C2" pin="2" pintype="passive"/>
+      <node ref="C3" pin="2" pintype="passive"/>
+      <node ref="C4" pin="2" pintype="passive"/>
+      <node ref="C5" pin="2" pintype="passive"/>
+      <node ref="C6" pin="2" pintype="passive"/>
+      <node ref="C7" pin="2" pintype="passive"/>
+      <node ref="C8" pin="2" pintype="passive"/>
+      <node ref="IC1" pin="6" pinfunction="~{SHDN}" pintype="passive"/>
+      <node ref="IC1" pin="8" pinfunction="VIN" pintype="passive"/>
+      <node ref="IC3" pin="18" pinfunction="AVCC" pintype="passive"/>
+      <node ref="IC3" pin="4" pinfunction="VCC" pintype="passive"/>
+      <node ref="J1" pin="A9" pinfunction="VBUS_1" pintype="passive"/>
+      <node ref="J1" pin="B9" pinfunction="VBUS_2" pintype="passive"/>
+      <node ref="J3" pin="4" pinfunction="Pin_4" pintype="passive"/>
+      <node ref="J4" pin="1" pinfunction="Pin_1" pintype="passive"/>
+      <node ref="R3" pin="1" pintype="passive"/>
+      <node ref="RN1" pin="7" pinfunction="7" pintype="passive"/>
+      <node ref="RN1" pin="8" pinfunction="8" pintype="passive"/>
+      <node ref="U1" pin="2" pinfunction="VDD" pintype="input"/>
+      <node ref="U2" pin="2" pinfunction="VDD" pintype="input"/>
+      <node ref="U3" pin="2" pinfunction="VDD" pintype="input"/>
+      <node ref="U4" pin="2" pinfunction="VDD" pintype="input"/>
+      <node ref="U5" pin="2" pinfunction="VDD" pintype="input"/>
+      <node ref="U6" pin="2" pinfunction="VDD" pintype="input"/>
+      <node ref="U7" pin="2" pinfunction="VDD" pintype="input"/>
+      <node ref="U8" pin="2" pinfunction="VDD" pintype="input"/>
+    </net>
+    <net code="3" name="/BTN">
+      <node ref="IC3" pin="10" pinfunction="(OC0A/PTCXY/AIN0)_PD6" pintype="passive"/>
+      <node ref="SET1" pin="2" pinfunction="NO_2" pintype="passive"/>
+    </net>
+    <net code="4" name="/DTR">
+      <node ref="C15" pin="2" pintype="passive"/>
+      <node ref="J3" pin="1" pinfunction="Pin_1" pintype="passive"/>
+    </net>
+    <net code="5" name="/HEX_1">
+      <node ref="IC3" pin="23" pinfunction="PC0_(ADC0/PTCY/MISO1)" pintype="passive"/>
+      <node ref="TALLY#1" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="6" name="/HEX_2">
+      <node ref="IC3" pin="24" pinfunction="PC1_(ADC1/PTCY/SCK1)" pintype="passive"/>
+      <node ref="TALLY#1" pin="2" pinfunction="2" pintype="passive"/>
+    </net>
+    <net code="7" name="/HEX_4">
+      <node ref="IC3" pin="25" pinfunction="PC2_(ADC2/PTCY)" pintype="passive"/>
+      <node ref="TALLY#1" pin="4" pinfunction="4" pintype="passive"/>
+    </net>
+    <net code="8" name="/HEX_8">
+      <node ref="IC3" pin="26" pinfunction="PC3_(ADC3/PTCY)" pintype="passive"/>
+      <node ref="TALLY#1" pin="8" pinfunction="8" pintype="passive"/>
+    </net>
+    <net code="9" name="/LED">
+      <node ref="IC3" pin="9" pinfunction="(OC0B/T1/PTCXY)_PD5" pintype="passive"/>
+      <node ref="LED1" pin="2" pinfunction="A" pintype="passive"/>
+    </net>
+    <net code="10" name="/LED_DATA">
+      <node ref="IC3" pin="12" pinfunction="(ICP1/CLKO/PTCXY)_PB0" pintype="passive"/>
+      <node ref="U1" pin="1" pinfunction="DIN" pintype="input"/>
+    </net>
+    <net code="11" name="/LED_DATA_2">
+      <node ref="IC3" pin="11" pinfunction="(PTCXY/AIN1)_PD7" pintype="passive"/>
+      <node ref="J4" pin="2" pinfunction="Pin_2" pintype="passive"/>
+    </net>
+    <net code="12" name="/MISO">
+      <node ref="IC3" pin="16" pinfunction="(MISO0/RXD1/PTCXY)_PB4" pintype="passive"/>
+      <node ref="U9" pin="7" pinfunction="MISO" pintype="input"/>
+    </net>
+    <net code="13" name="/MOSI">
+      <node ref="IC3" pin="15" pinfunction="(MOSI0/TXD1/OC2A/PTCXY)_PB3" pintype="passive"/>
+      <node ref="U9" pin="6" pinfunction="MOSI" pintype="input"/>
+    </net>
+    <net code="14" name="/RF_CE">
+      <node ref="IC3" pin="13" pinfunction="(OC1A/PTCXY)_PB1" pintype="passive"/>
+      <node ref="U9" pin="3" pinfunction="CE" pintype="input"/>
+    </net>
+    <net code="15" name="/RF_CSN">
+      <node ref="IC3" pin="14" pinfunction="(~{SS0}/OC1B/PTCXY)_PB2" pintype="passive"/>
+      <node ref="U9" pin="4" pinfunction="CSN" pintype="input"/>
+    </net>
+    <net code="16" name="/RST">
+      <node ref="C15" pin="1" pintype="passive"/>
+      <node ref="IC3" pin="29" pinfunction="PC6_(~{RESET})" pintype="passive"/>
+      <node ref="R3" pin="2" pintype="passive"/>
+    </net>
+    <net code="17" name="/RXI">
+      <node ref="IC3" pin="30" pinfunction="PD0_(PTCXY/OC3A/RXD0)" pintype="passive"/>
+      <node ref="J3" pin="3" pinfunction="Pin_3" pintype="passive"/>
+    </net>
+    <net code="18" name="/SCK">
+      <node ref="IC3" pin="17" pinfunction="PB5_(PTCXY/XCK0/SCK0)" pintype="passive"/>
+      <node ref="U9" pin="5" pinfunction="SCK" pintype="input"/>
+    </net>
+    <net code="19" name="/SCL">
+      <node ref="IC3" pin="28" pinfunction="PC5_(ADC5/PTCY/SCL0)" pintype="passive"/>
+      <node ref="Q1" pin="6" pinfunction="D2" pintype="passive"/>
+      <node ref="RN1" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="20" name="/SCL_3V">
+      <node ref="IC2" pin="1" pinfunction="SCL" pintype="passive"/>
+      <node ref="Q1" pin="1" pinfunction="S2" pintype="passive"/>
+      <node ref="RN1" pin="3" pinfunction="3" pintype="passive"/>
+    </net>
+    <net code="21" name="/SDA">
+      <node ref="IC3" pin="27" pinfunction="PC4_(ADC4/PTCY/SDA0)" pintype="passive"/>
+      <node ref="Q1" pin="3" pinfunction="D1" pintype="passive"/>
+      <node ref="RN1" pin="2" pinfunction="2" pintype="passive"/>
+    </net>
+    <net code="22" name="/SDA_3V">
+      <node ref="IC2" pin="4" pinfunction="SDA" pintype="passive"/>
+      <node ref="Q1" pin="4" pinfunction="S1" pintype="passive"/>
+      <node ref="RN1" pin="4" pinfunction="4" pintype="passive"/>
+    </net>
+    <net code="23" name="/TXO">
+      <node ref="IC3" pin="31" pinfunction="PD1_(PTCXY/OC4A/TXD0)" pintype="passive"/>
+      <node ref="J3" pin="2" pinfunction="Pin_2" pintype="passive"/>
+    </net>
+    <net code="24" name="/XTAL1">
+      <node ref="C17" pin="2" pintype="passive"/>
+      <node ref="IC3" pin="7" pinfunction="(XTAL1/TOSC1)_PB6" pintype="passive"/>
+      <node ref="Y1" pin="1" pintype="passive"/>
+    </net>
+    <net code="25" name="/XTAL2">
+      <node ref="C18" pin="2" pintype="passive"/>
+      <node ref="IC3" pin="8" pinfunction="(XTAL2/TOSC2)_PB7" pintype="passive"/>
+      <node ref="Y1" pin="2" pintype="passive"/>
+    </net>
+    <net code="26" name="GND">
+      <node ref="C1" pin="1" pintype="passive"/>
+      <node ref="C10" pin="2" pintype="passive"/>
+      <node ref="C11" pin="2" pintype="passive"/>
+      <node ref="C12" pin="2" pintype="passive"/>
+      <node ref="C13" pin="2" pintype="passive"/>
+      <node ref="C14" pin="1" pintype="passive"/>
+      <node ref="C16" pin="2" pintype="passive"/>
+      <node ref="C17" pin="1" pintype="passive"/>
+      <node ref="C18" pin="1" pintype="passive"/>
+      <node ref="C2" pin="1" pintype="passive"/>
+      <node ref="C3" pin="1" pintype="passive"/>
+      <node ref="C4" pin="1" pintype="passive"/>
+      <node ref="C5" pin="1" pintype="passive"/>
+      <node ref="C6" pin="1" pintype="passive"/>
+      <node ref="C7" pin="1" pintype="passive"/>
+      <node ref="C8" pin="1" pintype="passive"/>
+      <node ref="C9" pin="2" pintype="passive"/>
+      <node ref="IC1" pin="2" pinfunction="GND" pintype="passive"/>
+      <node ref="IC2" pin="3" pinfunction="GND" pintype="passive"/>
+      <node ref="IC3" pin="21" pinfunction="GND_2" pintype="passive"/>
+      <node ref="IC3" pin="5" pinfunction="GND_1" pintype="passive"/>
+      <node ref="J1" pin="A12" pinfunction="GND_1" pintype="passive"/>
+      <node ref="J1" pin="B12" pinfunction="GND_2" pintype="passive"/>
+      <node ref="J3" pin="5" pinfunction="Pin_5" pintype="passive"/>
+      <node ref="J3" pin="6" pinfunction="Pin_6" pintype="passive"/>
+      <node ref="J4" pin="3" pinfunction="Pin_3" pintype="passive"/>
+      <node ref="R1" pin="2" pintype="passive"/>
+      <node ref="R2" pin="2" pintype="passive"/>
+      <node ref="R4" pin="1" pintype="passive"/>
+      <node ref="R5" pin="1" pintype="passive"/>
+      <node ref="R6" pin="1" pintype="passive"/>
+      <node ref="SET1" pin="3" pinfunction="COM_1" pintype="passive"/>
+      <node ref="SET1" pin="4" pinfunction="COM_2" pintype="passive"/>
+      <node ref="TALLY#1" pin="C1" pinfunction="C1" pintype="passive"/>
+      <node ref="TALLY#1" pin="C2" pinfunction="C2" pintype="passive"/>
+      <node ref="U1" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U2" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U3" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U4" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U5" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U6" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U7" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U8" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U9" pin="1" pinfunction="GND" pintype="power_in"/>
+    </net>
+    <net code="27" name="Net-(3V1-A)">
+      <node ref="3V1" pin="2" pinfunction="A" pintype="passive"/>
+      <node ref="R4" pin="2" pintype="passive"/>
+    </net>
+    <net code="28" name="Net-(5V1-A)">
+      <node ref="5V1" pin="2" pinfunction="A" pintype="passive"/>
+      <node ref="R5" pin="2" pintype="passive"/>
+    </net>
+    <net code="29" name="Net-(IC1-BYPASS)">
+      <node ref="C10" pin="1" pintype="passive"/>
+      <node ref="IC1" pin="4" pinfunction="BYPASS" pintype="passive"/>
+    </net>
+    <net code="30" name="Net-(IC3-AREF)">
+      <node ref="C16" pin="1" pintype="passive"/>
+      <node ref="IC3" pin="20" pinfunction="AREF" pintype="passive"/>
+    </net>
+    <net code="31" name="Net-(IC3-PD2_(PTCXY{slash}INT0{slash}OC3B{slash}OC4B))">
+      <node ref="IC3" pin="32" pinfunction="PD2_(PTCXY/INT0/OC3B/OC4B)" pintype="passive"/>
+      <node ref="J2" pin="1" pinfunction="Pin_1" pintype="passive"/>
+    </net>
+    <net code="32" name="Net-(J1-CC1)">
+      <node ref="J1" pin="A5" pinfunction="CC1" pintype="passive"/>
+      <node ref="R1" pin="1" pintype="passive"/>
+    </net>
+    <net code="33" name="Net-(J1-CC2)">
+      <node ref="J1" pin="B5" pinfunction="CC2" pintype="passive"/>
+      <node ref="R2" pin="1" pintype="passive"/>
+    </net>
+    <net code="34" name="Net-(LED1-K)">
+      <node ref="LED1" pin="1" pinfunction="K" pintype="passive"/>
+      <node ref="R6" pin="2" pintype="passive"/>
+    </net>
+    <net code="35" name="Net-(U1-DOUT)">
+      <node ref="U1" pin="3" pinfunction="DOUT" pintype="input"/>
+      <node ref="U2" pin="1" pinfunction="DIN" pintype="input"/>
+    </net>
+    <net code="36" name="Net-(U2-DOUT)">
+      <node ref="U2" pin="3" pinfunction="DOUT" pintype="input"/>
+      <node ref="U3" pin="1" pinfunction="DIN" pintype="input"/>
+    </net>
+    <net code="37" name="Net-(U3-DOUT)">
+      <node ref="U3" pin="3" pinfunction="DOUT" pintype="input"/>
+      <node ref="U4" pin="1" pinfunction="DIN" pintype="input"/>
+    </net>
+    <net code="38" name="Net-(U4-DOUT)">
+      <node ref="U4" pin="3" pinfunction="DOUT" pintype="input"/>
+      <node ref="U5" pin="1" pinfunction="DIN" pintype="input"/>
+    </net>
+    <net code="39" name="Net-(U5-DOUT)">
+      <node ref="U5" pin="3" pinfunction="DOUT" pintype="input"/>
+      <node ref="U6" pin="1" pinfunction="DIN" pintype="input"/>
+    </net>
+    <net code="40" name="Net-(U6-DOUT)">
+      <node ref="U6" pin="3" pinfunction="DOUT" pintype="input"/>
+      <node ref="U7" pin="1" pinfunction="DIN" pintype="input"/>
+    </net>
+    <net code="41" name="Net-(U7-DOUT)">
+      <node ref="U7" pin="3" pinfunction="DOUT" pintype="input"/>
+      <node ref="U8" pin="1" pinfunction="DIN" pintype="input"/>
+    </net>
+    <net code="42" name="unconnected-(IC1-NC_1-Pad3)">
+      <node ref="IC1" pin="3" pinfunction="NC_1" pintype="passive+no_connect"/>
+    </net>
+    <net code="43" name="unconnected-(IC1-NC_2-Pad7)">
+      <node ref="IC1" pin="7" pinfunction="NC_2" pintype="passive+no_connect"/>
+    </net>
+    <net code="44" name="unconnected-(IC1-~{ERROR}-Pad5)">
+      <node ref="IC1" pin="5" pinfunction="~{ERROR}" pintype="passive+no_connect"/>
+    </net>
+    <net code="45" name="unconnected-(IC3-(OC2B{slash}INT1{slash}PTCXY)_PD3-Pad1)">
+      <node ref="IC3" pin="1" pinfunction="(OC2B/INT1/PTCXY)_PD3" pintype="passive+no_connect"/>
+    </net>
+    <net code="46" name="unconnected-(IC3-(SCL1{slash}T4{slash}PTCXY)_PE1-Pad6)">
+      <node ref="IC3" pin="6" pinfunction="(SCL1/T4/PTCXY)_PE1" pintype="passive+no_connect"/>
+    </net>
+    <net code="47" name="unconnected-(IC3-(SDA1{slash}ICP4{slash}ACO{slash}PTCXY)_PE0-Pad3)">
+      <node ref="IC3" pin="3" pinfunction="(SDA1/ICP4/ACO/PTCXY)_PE0" pintype="passive+no_connect"/>
+    </net>
+    <net code="48" name="unconnected-(IC3-(XCK0{slash}T0{slash}PTCXY)_PD4-Pad2)">
+      <node ref="IC3" pin="2" pinfunction="(XCK0/T0/PTCXY)_PD4" pintype="passive+no_connect"/>
+    </net>
+    <net code="49" name="unconnected-(IC3-PE2_(ADC6{slash}PTCY{slash}ICP3{slash}~{SS1})-Pad19)">
+      <node ref="IC3" pin="19" pinfunction="PE2_(ADC6/PTCY/ICP3/~{SS1})" pintype="passive+no_connect"/>
+    </net>
+    <net code="50" name="unconnected-(IC3-PE3_(ADC7{slash}PTCY{slash}T3{slash}MOSI1)-Pad22)">
+      <node ref="IC3" pin="22" pinfunction="PE3_(ADC7/PTCY/T3/MOSI1)" pintype="passive+no_connect"/>
+    </net>
+    <net code="51" name="unconnected-(J1-PadMH1)">
+      <node ref="J1" pin="MH1" pinfunction="MH1" pintype="passive+no_connect"/>
+    </net>
+    <net code="52" name="unconnected-(J1-PadMH2)">
+      <node ref="J1" pin="MH2" pinfunction="MH2" pintype="passive+no_connect"/>
+    </net>
+    <net code="53" name="unconnected-(J1-PadMH3)">
+      <node ref="J1" pin="MH3" pinfunction="MH3" pintype="passive+no_connect"/>
+    </net>
+    <net code="54" name="unconnected-(J1-PadMH4)">
+      <node ref="J1" pin="MH4" pinfunction="MH4" pintype="passive+no_connect"/>
+    </net>
+    <net code="55" name="unconnected-(SET1-NO_1-Pad1)">
+      <node ref="SET1" pin="1" pinfunction="NO_1" pintype="passive+no_connect"/>
+    </net>
+    <net code="56" name="unconnected-(U8-DOUT-Pad3)">
+      <node ref="U8" pin="3" pinfunction="DOUT" pintype="input+no_connect"/>
+    </net>
+    <net code="57" name="unconnected-(U9-IRQ-Pad8)">
+      <node ref="U9" pin="8" pinfunction="IRQ" pintype="output+no_connect"/>
+    </net>
+  </nets>
+</export>

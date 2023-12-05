@@ -60,12 +60,9 @@ TODO
 // MISO - 16 PB4
 
 // Pixels
-// #define LED_F_PIN     7
-// #define LED_B_PIN     8
 #define LED_PIN       8
 
-
-// BCD Switch
+// BCD Switch         NOTE: these are read direct from the PINC register in the MY_TALLY_ID macro
 #define BCD_1         14    // 26 - PC0
 #define BCD_2         15    // 25 - PC1
 #define BCD_4         16    // 24 - PC2
@@ -73,7 +70,7 @@ TODO
 
 #define BTN_PIN       6
 
-// Light Sensor??
+// Light Sensor
 // SCL -- 19 - 28 PC5
 // SDA -- 18 - 27 PC4
 
@@ -85,11 +82,11 @@ RF24 radio(RF_CE_PIN, RF_CSN_PIN);
 
 uint8_t RF_address[] = "TALY0";
 
-#define MY_TALLY_ID ~PINC & 0x0F    // Returns current tally number according to BCD switch
+#define MY_TALLY_ID (~PINC & 0x0F)    // Returns current tally number according to BCD switch
 
-uint16_t tallyState_RAW[3];         // Tally flags (1-15, 0 is unused), [0] Prev, [1] Prog, [3] ISO
+uint16_t tallyState_RAW[3];           // Tally flags (1-15, 0 is unused), [0] Prev, [1] Prog, [3] ISO
 
-#define RF_TIMEOUT  5000       // (ms) timeout period for receiving data
+#define RF_TIMEOUT  5000              // (ms) timeout period for receiving data
 
 #define NUM_LEDS    8
 CRGB leds[NUM_LEDS];
@@ -112,18 +109,37 @@ Adafruit_VEML7700 veml = Adafruit_VEML7700();
 
 #define MAX_LUX     1500          // Lux Level at which LEDs are set to their brightest
 #define MIN_LED_BRIGHTNESS  5     // Minimum brightness LEDs are set to 
-#define LUX_REFRESH 200           // (ms) Interval which brightness is adjusted at
+#define LUX_REFRESH 1000          // (ms) Interval which brightness is adjusted at
 
 
 
 
 void setup() 
 {
+  // Setup the things - does codes on LEDs to indicate progress as follows - lights an LED purple as each step is completed
+      // LED 0 - Pixel Setup
+      // LED 1 - Input Setup
+      // LED 2 - Lux sensor setup - pauses on red colour for a second if lux sensor not found
+      // LED 3 - NRF24L01 - halts on red if error starting radio
+      // If debug enabled, steps yellow LEDs until connection is made via serial
+
+
+  // Setup Pixel LEDs
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setBrightness(MIN_LED_BRIGHTNESS);
+  fill_solid(leds, NUM_LEDS, 0x000000);
+
   #ifdef DEBUG
     Serial.begin(115200);
-    while (!Serial) ; 
+    while (!Serial)
+      timeoutLEDS(COL_YELLOW);      // Waiting for serial connection
   #endif
 
+  leds[0] = COL_PURPLE;
+  FastLED.show();
+
+
+  // Input setup  
   pinMode(BCD_1, INPUT_PULLUP);
   pinMode(BCD_2, INPUT_PULLUP);
   pinMode(BCD_4, INPUT_PULLUP);
@@ -131,36 +147,43 @@ void setup()
 
   pinMode(BTN_PIN, INPUT_PULLUP);
 
+  leds[1] = COL_PURPLE;
+  FastLED.show();
 
   if (!veml.begin()) 
   {
     DPRINTLN("Light sensor not found");
-  }    
+
+    leds[2] = COL_RED;
+    FastLED.show();
+    delay(1000);
+  }
+
+  leds[2] = COL_PURPLE;
+  FastLED.show();
 
 
-  radio.begin();
+  if (!radio.begin())
+  {
+    DPRINTLN("NRF24L01 not found");
+
+    leds[3] = COL_RED;
+    FastLED.show();
+
+    while (1) {}  // No point in continuing because the radio is a critical part of this program
+  }
   radio.setChannel(108);              // Keep out of way of common wifi frequencies = 2.4GHz + 0.108 GHz = 2.508GHz
   radio.setPALevel(RF24_PA_MAX);      // Let's make this powerful... later (RF24_PA_MAX)
   radio.setDataRate( RF24_250KBPS );  // Use low bitrate to be more reliable.. I think??
   radio.setAutoAck(false);            // Don't acknowledge messages
   radio.openReadingPipe(0, RF_address); // All messages read on port 0
-  radio.startListening();             
+  radio.startListening();
 
+  leds[3] = COL_PURPLE;
+  FastLED.show();             
 
-
-  // Setup Pixel LEDs
-  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
-  FastLED.setBrightness(MIN_LED_BRIGHTNESS);
-
-  fill_solid(leds, NUM_LEDS, 0x000020);
-  FastLED.show();
-
-
-  #ifdef DEBUG
-    Serial.print("MyAddress = ");
-    Serial.println(MY_TALLY_ID);
-  #endif
-
+  DPRINT(F("MyAddress = "));
+  DPRINTLN(MY_TALLY_ID);
 
   if (!digitalRead(BTN_PIN))
   {
@@ -169,9 +192,7 @@ void setup()
     FastLED.show();
 
     while(1) // Stay in setup mode until power cycle (TODO - jump out of it if no changes made in a while)
-    {
-
-    }
+    {}
   }
 
 }
@@ -191,6 +212,11 @@ void loop()
   // Update LEDs instantly if MY_TALLY_ID has changed
   if (MY_TALLY_ID != myTallyID_last)
   {
+    DPRINT("TallyNum changed from ");
+    DPRINT(myTallyID_last);
+    DPRINT("\t to ");
+    DPRINTLN(MY_TALLY_ID);
+
     LightLEDs();
     myTallyID_last = MY_TALLY_ID;
   }
@@ -198,28 +224,14 @@ void loop()
   // Set brightness from light sensor
   checkRoomLux();
 
-
   if (millis() < lastRFTime)               // Millis() wrapped around - restart timer
     lastRFTime = millis();
 
   if (lastRFTime + RF_TIMEOUT < millis())   // Show LED timeout pattern if we haven't received RF data in a while
-    timeoutLEDS();
-   
-
-
-  // TODO - Indicate on LEDs if we haven't received a message for 10 seconds or so
-      // Alternate flash back LEDs
-      // Turn off front LEDs
+    timeoutLEDS(COL_BLUE);
   
 }
 
-
-void clearLEDs()
-{
-  fill_solid(leds, NUM_LEDS, COL_BLACK);
-
-  return;
-}
 
 void LightLEDs()
 {
@@ -228,10 +240,8 @@ void LightLEDs()
   // Clear LED colours
   fill_solid(leds, NUM_LEDS, COL_BLACK);
 
-
   if ( tallyState_RAW[0] & (1 << MY_TALLY_ID) ) // IF PREVIEW
     fill_solid(leds, NUM_LEDS/2, COL_GREEN);
-
 
   if ( tallyState_RAW[1] & (1 << MY_TALLY_ID) )    // IF PROGRAM
     fill_solid(leds, NUM_LEDS, COL_RED);
@@ -245,18 +255,17 @@ void LightLEDs()
       fill_solid(leds, NUM_LEDS/2, COL_YELLOW);
   }
 
-
   FastLED.show();
   return;
 }
 
-void timeoutLEDS()
+
+void timeoutLEDS(uint32_t led_col)
 {
   // Steps blue across back LEDs 
   static uint32_t lastStepTime = millis();
   static uint8_t stepNum = 0;
   const uint16_t stepTime = 500;            // time 
-
 
   if (millis() < lastStepTime)               // Millis() wrapped around - restart timer
     lastStepTime = millis();
@@ -266,10 +275,10 @@ void timeoutLEDS()
   else
     return;
 
-  clearLEDs();
+  fill_solid(leds, NUM_LEDS, COL_BLACK);
 
   // Set one LED to blue
-  leds[stepNum++] = COL_BLUE;
+  leds[stepNum++] = led_col;
 
   if (stepNum >= NUM_LEDS/2)
     stepNum = 0;
@@ -278,6 +287,7 @@ void timeoutLEDS()
 
   return;
 }
+
 
 void checkRoomLux()
 {
@@ -321,7 +331,6 @@ bool CheckRF()
   // Checks for updates from controller & updates state accordingly
   bool newMessage = false;
 
-
   if (radio.available())    // Read in message
   {
     DPRINT(".");
@@ -339,6 +348,9 @@ bool CheckRF()
         Serial.print("\t");
       }
       Serial.println();
+
+      Serial.print("MyAddress = ");
+      Serial.println(MY_TALLY_ID);
     }
   #endif
 
