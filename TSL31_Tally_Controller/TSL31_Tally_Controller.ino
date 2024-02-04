@@ -43,9 +43,10 @@ TSL TALLY DATA FORMAT (TSL 3.1)
 
 | HEADER | CONTROL BYTE | DISPLAY DATA |
 ----------------------------------------------------------------
-  Header (1 Byte) = Display address (0-126) + 80 hex (control byte and display data will be sent )
+HEADER (1 Byte)
+  Display address (0-126) + 80 hex (control byte and display data will be sent )
 
-Control (1 byte)
+CONTROL (1 byte)
   bit 0 = tally 1 ( 1=on, 0=off )
   bit 1 = tally 2 ( 1=on, 0=off )
   bit 2 = tally 3 ( 1=on, 0=off )
@@ -61,7 +62,8 @@ Control (1 byte)
     bit 6 = reserved (clear to 0)
     bit 7 = cleared to 0
 
-Display Data (16 bytes) = 16 displayable ASCII characters in the range 20 hex to 7E hex. All 16 characters must be sent.
+DATA (16 bytes)
+  16 displayable ASCII characters in the range 20 hex to 7E hex. All 16 characters must be sent.
 
 
 */
@@ -177,14 +179,27 @@ void setup()
 {
   // INITIALISE PIXEL LEDS
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
-  fill_solid(leds, NUM_LEDS, COL_BLUE); // Clear LEDs
+  fill_solid(leds, NUM_LEDS, COL_BLACK);
+  leds[0] = COL_BLUE;
   FastLED.setBrightness(LED_BRIGHTNESS);
   FastLED.show();
 
 
   #ifdef DEBUG
+    uint8_t tempStep = 0;
+
     Serial.begin(115200);
-    while (!Serial) ; 
+    while (!Serial) ;                 // Step through LEDs while waiting 
+    {
+      fill_solid(leds, NUM_LEDS, COL_BLUE);
+      leds[tempStep++] = COL_RED;
+      delay(200);
+
+      if (tempStep >= NUM_LEDS)
+        tempStep = 0;
+
+      FastLED.show();
+    }
   #endif
 
   // INITIALISE RADIO
@@ -195,7 +210,8 @@ void setup()
   radio.setAutoAck(false);            // Don't acknowledge messages
   radio.openWritingPipe(RF_address);  // All messages sent to same address
 
-
+  leds[1] = COL_BLUE;
+  FastLED.show();
   // for (uint8_t i = 0; i < TALLY_QTY; ++i) // clear tally light array
   //   tallyState_RAW[i] = INPUTOFF;
 
@@ -203,6 +219,9 @@ void setup()
   // INITIALISE ETHERNET
   Ethernet.begin(mac, ip);
   Udp.beginMulticast(multicastip, multicastport);
+
+  leds[2] = COL_BLUE;
+  FastLED.show();
 
   DPRINT(F("Starting to Listen for UDP Multicast Traffic on IP: "));
   DPRINT(multicastip);
@@ -213,6 +232,9 @@ void setup()
   for (uint8_t i = 0; i < sizeof(tallyState_RAW) * sizeof(tallyState_RAW[0]); ++i)  // Initialise to 0
     tallyState_RAW[i] = 0;
 
+
+  fill_solid(leds, NUM_LEDS, COL_BLACK);
+  FastLED.show();
 }
 
 
@@ -432,24 +454,37 @@ uint8_t getCamNumber()
 
   uint8_t camNumber = 0;
 
-  // Confirm format is "CAM X" for name
-  if (packetBuffer[2] == 'C' && packetBuffer[3] == 'A' && packetBuffer[4] == 'M' && packetBuffer[5] == ' ')
+  for (uint8_t i = 0; i < 12; ++i)
   {
-    if (packetBuffer[7] <= '9' && packetBuffer[7] >= '0')
-    {
-      if (packetBuffer[8] <= '9' && packetBuffer[8] >= '0') // 3 digit cam number
-        camNumber = (packetBuffer[6]-0x30) * 100 + (packetBuffer[7]-0x30) * 10 + (packetBuffer[8]-0x30);
-      else                                                // 2 Digit cam number
-        camNumber = (packetBuffer[6]-0x30) * 10 + (packetBuffer[7]-0x30);
-    }
-    else                                                  // single digit cam number
-      camNumber = packetBuffer[6]-0x30; // Using plain text input name
-  }
-  else
-  {
-    DPRINTLN(F("invalid cam input text format"));
-  }
 
+    // Confirm format is "CAM X" for name
+    if (packetBuffer[2+i] == 'C' && packetBuffer[3+i] == 'A' && packetBuffer[4+i] == 'M')
+    {
+      if (packetBuffer[5+i] == ' ')     // If there is a space after 'CAM', increment where we're looking
+      {
+        i++;
+        DPRINTLN(F("Space detected"));
+      }
+
+      if (packetBuffer[6+i] <= '9' && packetBuffer[6+i] >= '0')
+      {
+        if (packetBuffer[7+i] <= '9' && packetBuffer[7+i] >= '0') // 3 digit cam number
+          camNumber = (packetBuffer[5+i]-0x30) * 100 + (packetBuffer[6+i]-0x30) * 10 + (packetBuffer[7+i]-0x30);
+        else                                                // 2 Digit cam number
+          camNumber = (packetBuffer[5+i]-0x30) * 10 + (packetBuffer[6+i]-0x30);
+      }
+      else                                                  // single digit cam number
+        camNumber = packetBuffer[5+i]-0x30; // Using plain text input name
+
+      DPRINT(F("CAM NUMBER = "));
+      DPRINTLN(camNumber);
+      return camNumber;
+    }
+    else
+    {
+      DPRINTLN(F("invalid cam input text format"));
+    }
+  }
 
   return camNumber;
 }

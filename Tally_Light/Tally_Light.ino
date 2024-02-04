@@ -70,6 +70,10 @@ TODO
 
 #define BTN_PIN       6
 
+// Outputs
+#define PIN_PREV    1
+#define PIN_PROG    0
+
 // Light Sensor
 // SCL -- 19 - 28 PC5
 // SDA -- 18 - 27 PC4
@@ -107,7 +111,7 @@ CRGB leds[NUM_LEDS];
 //////////////////// LUX SENSOR ////////////////////
 Adafruit_VEML7700 veml = Adafruit_VEML7700();
 
-#define MAX_LUX     1500          // Lux Level at which LEDs are set to their brightest
+#define MAX_LUX     1000          // Lux Level at which LEDs are set to their brightest
 #define MIN_LED_BRIGHTNESS  5     // Minimum brightness LEDs are set to 
 #define LUX_REFRESH 1000          // (ms) Interval which brightness is adjusted at
 
@@ -239,12 +243,20 @@ void LightLEDs()
   
   // Clear LED colours
   fill_solid(leds, NUM_LEDS, COL_BLACK);
+  digitalWrite(PIN_PREV, LOW);
+  digitalWrite(PIN_PROG, LOW);
 
   if ( tallyState_RAW[0] & (1 << MY_TALLY_ID) ) // IF PREVIEW
+  {
     fill_solid(leds, NUM_LEDS/2, COL_GREEN);
+    // digitalWrite(PIN_PREV, HIGH);
+  }
 
   if ( tallyState_RAW[1] & (1 << MY_TALLY_ID) )    // IF PROGRAM
+  {
     fill_solid(leds, NUM_LEDS, COL_RED);
+    digitalWrite(PIN_PROG, HIGH);
+  }
 
   if ( tallyState_RAW[2] & (1 << MY_TALLY_ID) )  // IF ISO
   {
@@ -253,6 +265,8 @@ void LightLEDs()
       fill_solid(leds, NUM_LEDS/4, COL_YELLOW);
     else
       fill_solid(leds, NUM_LEDS/2, COL_YELLOW);
+
+    digitalWrite(PIN_PROG, HIGH);
   }
 
   FastLED.show();

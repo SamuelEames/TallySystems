@@ -209,7 +209,7 @@ void loop()
   LightLEDs_EXTTally();     // light up local LEDs
 
 
-  delay(1000);
+  delay(5000);
 
 }
 
