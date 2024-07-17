@@ -92,13 +92,13 @@ DATA (16 bytes)
 // #include "ENUMVars.h"
 
 ///////////////////////// IO /////////////////////////
-#define LED_PIN     6
+#define LED_PIN       6
 #define RF_CSN_PIN    18
 #define RF_CE_PIN     19
 
 
 //////////////////// Pixel Setup ////////////////////
-#define NUM_LEDS 8
+#define NUM_LEDS      8
 CRGB leds[NUM_LEDS]; // Define the array of leds
 
 #define LED_BRIGHTNESS 10
